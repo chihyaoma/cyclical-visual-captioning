@@ -7,7 +7,7 @@ This is the PyTorch implementation of our paper:
 [__***Chih-Yao Ma***__](https://chihyaoma.github.io/), [Yannis Kalantidis](https://www.skamalas.com/), [Ghassan AlRegib](https://ghassanalregib.info/), [Peter Vajda](https://sites.google.com/site/vajdap), 
 [Marcus Rohrbach](https://rohrbach.vision/), [Zsolt Kira](https://www.cc.gatech.edu/~zk15/)<br>
 
-[[arXiv](https://arxiv.org/abs/1906.00283)] [[GitHub](https://github.com/chihyaoma/cyclical-visual-captioning)] [Project (coming soon)]
+[[arXiv](https://arxiv.org/abs/1906.00283)] [[GitHub](https://github.com/chihyaoma/cyclical-visual-captioning)] [[Project](https://chihyaoma.github.io/project/2019/06/03/cyclical.html)]
 
 <p align="center">
 <img src="teaser/concept.png" width="100%">
