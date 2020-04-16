@@ -1,0 +1,11 @@
+numpy
+pyyaml
+h5py
+matplotlib
+nltk
+scikit-image
+stanfordcorenlp
+tqdm
+sklearn
+scikit-learn
+tensorboardX

@@ -1,0 +1,111 @@
+# dataset setting
+dataset: anet
+input_json: "cap_anet_trainval.json"
+input_dic: "dic_anet.json"
+input_raw_cap: "anet_captions_all_splits.json"
+seg_feature_root: "rgb_motion_1d"
+# image_path: 'frames_10frm' # for visualization only
+feature_root: "fc6_feat_100rois"
+proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
+
+val_split: validation
+densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
+# val_split: testing
+# densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
+
+# data_path: 'data/anet-nethome/'  # skynet
+# data_path: '/srv/datasets/activityNet/anet-entities/'  # skynet
+# data_path: '/datasets/cma64/anet/'  # ripl-w1
+# data_path: /home/temp/cma64/anet-entities/  # ripl-s1
+data_path: data/anet/ # ripl-w5 & ripl-w6
+
+# training and eval setting
+# exp_name: 20190904-baseline-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_50
+# exp_name: 20190902-cyclical-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet_ripls1-seed_123
+# exp_name: 20190829-baseline-BS_96-cpu_8-LR_1e-4-epoch_100-skynet_ripls1-seed_1
+# exp_name: 20190903-baseline-BS_96-cpu_6-LR_1e-4-epoch_100-skynet_bb8-seed_50
+# exp_name: 20190906-baseline_sup-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
+# exp_name: 20190906-baseline_sup-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_1
+# exp_name: 20190908-baseline_sup-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_100
+# exp_name: 20190908-baseline_sup-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
+# exp_name: 20190908-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
+# exp_name: 20190911-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_1
+# exp_name: 20190908-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
+# exp_name: 20190909-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
+# exp_name: 20190909-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_1
+# exp_name: 20190913-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_50
+# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2-seed_123
+# exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2-seed_1
+# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
+# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
+# exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_50
+# exp_name: 20190909-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
+# exp_name: 20190914-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
+# exp_name: 20190908-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
+# exp_name: 20190908-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
+# exp_name: 20190911-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_50
+# exp_name: 20190918-baseline-softattn_additive-grounding_percent_0.5-BS_64-cpu_8-LR_1e-4-epoch_100-riplw1-seed_123
+# exp_name: 20190908-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
+# exp_name: 20190909-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
+# exp_name: 20190911-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_1
+exp_name: 20200415-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw6_2080-seed_1
+
+seed: 1
+densecap_verbose: True
+disp_interval: 1
+
+grounding_annotation_amount: 0.5
+
+# evaluating options
+language_eval: True
+eval_obj_grounding: False
+eval_obj_grounding_gt: False
+inference_only: False
+resume: False
+load_best_score: 1
+
+# language model
+#att_model: topdown
+att_model: cyclical
+num_layers: 1
+seq_per_img: 1
+
+# training setting
+learning_rate: 0.0001
+# learning_rate: 0.00005
+optim: "adam"
+max_epochs: 100
+# batch_size: 240
+# batch_size: 256 # OOM
+# batch_size: 192  # dataloading is slow
+# num_workers: 2
+batch_size: 96
+# batch_size: 64
+num_workers: 8
+
+cuda: True
+mGPUs: True
+
+# model
+softattn_type: "additive"
+# obj_interact: True
+obj_interact: False
+embedding_vocab_plus_1: False
+
+# cyclical training
+train_decoder_only: True
+
+# model size
+num_prop_per_frm: 100
+t_attn_size: 480
+rnn_size: 1024
+input_encoding_size: 512
+att_hid_size: 512
+
+# supervised weighting
+# w_att2: 0.05
+# w_grd: 0.0
+# w_cls: 0.1
+w_att2: 0.0
+w_grd: 0.0
+w_cls: 0.0

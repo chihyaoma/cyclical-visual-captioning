@@ -1,0 +1,88 @@
+# dataset setting
+dataset: anet
+# input_json: 'data/anet/cap_anet_trainval.json'
+# input_dic: 'data/anet/dic_anet.json'
+# input_raw_cap: 'data/anet/anet_captions_all_splits.json'
+# seg_feature_root: 'data/anet/rgb_motion_1d'
+# image_path: 'data/anet/frames_10frm' # for visualization only
+# feature_root: 'data/anet/fc6_feat_100rois'
+# proposal_h5: 'data/anet/anet_detection_vg_fc6_feat_100rois.h5'
+
+input_json: 'anet_entities_prep/cap_anet_trainval.json'
+input_dic: 'anet_entities_prep/dic_anet.json'
+input_raw_cap: 'anet_captions_all_splits.json'
+# image_path: 'frames_10frm' # for visualization only
+proposal_h5: 'anet_detection_vg_fc6_feat_100rois.h5'
+# densecap_references: ['anet_entities_captions/anet_entities_val_1.json', 'anet_entities_captions/anet_entities_val_2.json']
+densecap_references: ['anet_entities_val_1.json', 'anet_entities_val_2.json']
+seg_feature_root: 'dummy_rgb_motion_1d'
+feature_root: 'dummy_fc6_feat_100rois'
+
+data_path: 'data/anet/'
+
+#num_prop_per_frm: 100
+num_prop_per_frm: 20
+
+# language model
+#att_model: topdown
+att_model: cyclical
+
+num_layers: 1
+seq_per_img: 1
+val_images_use: -1
+optim: 'adam'
+
+cuda: False
+# cuda: True
+mGPUs: False
+
+# training setting
+learning_rate: 0.0001
+max_epochs: 100
+batch_size: 8
+num_workers: 0
+
+# training and eval setting
+exp_name: local_dev
+#exp_name: 20190902-cyclical-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet_ripls1-seed_123
+seed: 1
+densecap_verbose: True
+disp_interval: 1
+grounding_annotation_amount: 0
+
+# evaluating options
+language_eval: False
+eval_obj_grounding: False
+eval_obj_grounding_gt: False
+inference_only: False
+resume: False
+load_best_score: 1
+
+# model
+softattn_type: 'additive'
+obj_interact: False
+embedding_vocab_plus_1: False
+
+# cyclical training
+train_decoder_only: True
+#train_decoder_only: False
+# resume_decoder_exp_name: damn
+resume_embed: 0
+resume_logit: 0
+resume_roi_extractor: 1
+
+# localizer
+nltk_visually_groundable: True
+localizer_only_groundable: True
+
+# smaller model
+#t_attn_size: 480
+t_attn_size: 120
+#rnn_size: 256
+#input_encoding_size: 128
+#att_hid_size: 128
+
+# supervised weighting
+w_att2: 0.05
+w_grd: 0
+w_cls: 0.1

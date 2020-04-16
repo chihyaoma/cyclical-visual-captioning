@@ -14,3 +14,42 @@ This is the PyTorch implementation of our paper:
 </p>
 
 ## Code coming soon! Please stay tuned.
+
+## Quick Start
+
+Clone the repo recursively:
+
+```shell
+git clone --recursive git@github.com:chihyaoma/cyclical-visual-captioning.git
+```
+
+If you didn't clone with the --recursive flag, then you'll need to manually clone the pybind submodule from the top-level directory:
+
+```shell
+git submodule update --init --recursive
+```
+
+## Installation
+
+The proposed cyclical method can be applied directly to image and video captioning tasks.
+
+Please follows the individual installation guidelines to install for image captioning dataset or video captioning dataset, in case you only need one of them.
+
+## Acknowledgments
+
+Chih-Yao Ma and Zsolt Kira were partly supported by DARPA’s Lifelong Learning Machines (L2M) program, under Cooperative Agreement HR0011-18-2-0019, as part of their affiliation with Georgia Tech.
+We thank Chia-Jung Hsu for her valuable and artistic helps on the figures.
+
+## Citation
+
+If you find this repository useful, please cite our paper:
+
+```shell
+@article{ma2019learning,
+    title={Learning to Generate Grounded Visual Captions without Localization Supervision},
+    author={Ma, Chih-Yao and Kalantidis, Yannis and AlRegib, Ghassan and Vajda, Peter and Rohrbach, Marcus and Kira, Zsolt},
+    journal={arXiv preprint arXiv:1906.00283},
+    year={2019},
+    url={https://arxiv.org/abs/1906.00283},
+}
+```
