@@ -289,8 +289,8 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
 
         else:
             lm_loss, att2_loss, ground_loss, cls_loss = model(segs_feat, input_seqs, gt_seqs, input_num,
-                                                              input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms,
-                                                              sample_idx, pnt_mask, 'MLE')
+                                                            input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms,
+                                                            sample_idx, pnt_mask, 'MLE')
 
         # record loss to avg. meters here
         tb_step = opt.batch_size * opt.seq_per_img
@@ -355,46 +355,46 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                   .format(epoch, step, len(dataloader) - 1, batch_time=batch_time, data_time=data_time,
                           lm_loss=lm_losses, attn_loss=attn_losses, cls_loss=cls_losses, recon_loss=lm_recon_losses))
 
-            lm_losses.update(lm_loss.item(), tb_step)
-            attn_losses.update(att2_loss.item(), tb_step)
-            cls_losses.update(cls_loss.item(), tb_step)
+        lm_losses.update(lm_loss.item(), tb_step)
+        attn_losses.update(att2_loss.item(), tb_step)
+        cls_losses.update(cls_loss.item(), tb_step)
 
         # Write the training loss summary
         if (iteration % opt.losses_log_every == 0):
             loss_history[iteration] = loss.item()
             lr_history[iteration] = opt.learning_rate
 
-        if opt.enable_visdom:
-            if vis_window['iter'] is None:
-                vis_window['iter'] = vis.line(
-                    X=np.tile(np.arange(epoch * nbatches + step, epoch * nbatches + step + 1),
-                              (5, 1)).T,
-                    Y=np.column_stack((np.asarray(np.mean(train_loss)),
-                                       np.asarray(np.mean(lm_loss_temp)),
-                                       np.asarray(np.mean(att2_loss_temp)),
-                                       np.asarray(np.mean(ground_loss_temp)),
-                                       np.asarray(np.mean(cls_loss_temp)))),
-                    opts=dict(title='Training Loss',
-                              xlabel='Training Iteration',
-                              ylabel='Loss',
-                              legend=['total', 'lm', 'attn', 'grd', 'cls'])
-                )
-            else:
-                vis.line(
-                    X=np.tile(np.arange(epoch * nbatches + step, epoch * nbatches + step + 1),
-                              (5, 1)).T,
-                    Y=np.column_stack((np.asarray(np.mean(train_loss)),
-                                       np.asarray(np.mean(lm_loss_temp)),
-                                       np.asarray(np.mean(att2_loss_temp)),
-                                       np.asarray(np.mean(ground_loss_temp)),
-                                       np.asarray(np.mean(cls_loss_temp)))),
-                    opts=dict(title='Training Loss',
-                              xlabel='Training Iteration',
-                              ylabel='Loss',
-                              legend=['total', 'lm', 'attn', 'grd', 'cls']),
-                    win=vis_window['iter'],
-                    update='append'
-                )
+        # if opt.enable_visdom:
+        #     if vis_window['iter'] is None:
+        #         vis_window['iter'] = vis.line(
+        #             X=np.tile(np.arange(epoch * nbatches + step, epoch * nbatches + step + 1),
+        #                       (5, 1)).T,
+        #             Y=np.column_stack((np.asarray(np.mean(train_loss)),
+        #                                np.asarray(np.mean(lm_loss_temp)),
+        #                                np.asarray(np.mean(att2_loss_temp)),
+        #                                np.asarray(np.mean(ground_loss_temp)),
+        #                                np.asarray(np.mean(cls_loss_temp)))),
+        #             opts=dict(title='Training Loss',
+        #                       xlabel='Training Iteration',
+        #                       ylabel='Loss',
+        #                       legend=['total', 'lm', 'attn', 'grd', 'cls'])
+        #         )
+        #     else:
+        #         vis.line(
+        #             X=np.tile(np.arange(epoch * nbatches + step, epoch * nbatches + step + 1),
+        #                       (5, 1)).T,
+        #             Y=np.column_stack((np.asarray(np.mean(train_loss)),
+        #                                np.asarray(np.mean(lm_loss_temp)),
+        #                                np.asarray(np.mean(att2_loss_temp)),
+        #                                np.asarray(np.mean(ground_loss_temp)),
+        #                                np.asarray(np.mean(cls_loss_temp)))),
+        #             opts=dict(title='Training Loss',
+        #                       xlabel='Training Iteration',
+        #                       ylabel='Loss',
+        #                       legend=['total', 'lm', 'attn', 'grd', 'cls']),
+        #             win=vis_window['iter'],
+        #             update='append'
+        #         )
 
     if tb_logger:
         tb_logger.add_scalar('train/learning_rate',
@@ -478,18 +478,18 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                     # lang_eval=True)
             else:
                 seq, att2_weights, sim_mat = model(segs_feat, dummy, dummy, input_num,
-                                                   input_ppls, dummy, dummy, ppls_feat, dummy, sample_idx, pnt_mask,
-                                                   'sample', eval_opt)
+                                                input_ppls, dummy, dummy, ppls_feat, dummy, sample_idx, pnt_mask,
+                                                'sample', eval_opt)
 
             # save localization results on generated sentences
             if opt.eval_obj_grounding:
                 assert opt.beam_size == 1, 'only support beam_size is 1'
 
                 att2_ind = torch.max(att2_weights.view(batch_size, att2_weights.size(1),
-                                                       opt.num_sampled_frm, opt.num_prop_per_frm), dim=-1)[1]
+                                                    opt.num_sampled_frm, opt.num_prop_per_frm), dim=-1)[1]
                 obj_bbox_att2 = torch.gather(input_ppls.view(-1, opt.num_sampled_frm, opt.num_prop_per_frm, 7)
-                                             .permute(0, 2, 1, 3).contiguous(), 1,
-                                             att2_ind.unsqueeze(-1).expand((batch_size,
+                                            .permute(0, 2, 1, 3).contiguous(), 1,
+                                            att2_ind.unsqueeze(-1).expand((batch_size,
                                                                             att2_ind.size(
                                                                                 1), opt.num_sampled_frm,
                                                                             input_ppls.size(-1))))  # Bx20x10x7
@@ -498,7 +498,7 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                     vid_id, seg_idx = seg_id[i].split('_segment_')
                     seg_idx = str(int(seg_idx))
                     tmp_result = {'clss': [], 'idx_in_sent': [],
-                                  'bbox_for_all_frames': []}
+                                'bbox_for_all_frames': []}
 
                     for j in range(seq.size(1)):
                         if seq[i, j].item() != 0:
@@ -515,7 +515,7 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                     grd_output[vid_id][seg_idx] = tmp_result
 
             sents = utils.decode_sequence(dataset.itow, dataset.itod, dataset.ltow, dataset.itoc,
-                                          dataset.wtod, seq.data, opt.vocab_size, opt)
+                                        dataset.wtod, seq.data, opt.vocab_size, opt)
 
             for k, sent in enumerate(sents):
                 vid_idx, seg_idx = seg_id[k].split('_segment_')
@@ -523,7 +523,7 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
 
                 predictions[vid_idx].append(
                     {'sentence': sent,
-                     'timestamp': raw_caption_file[vid_idx]['timestamps'][seg_idx]})
+                    'timestamp': raw_caption_file[vid_idx]['timestamps'][seg_idx]})
 
                 if num_show < 20:
                     print('segment %s: %s' % (seg_id[k], sent))
@@ -843,6 +843,8 @@ if __name__ == '__main__':
     #     model.cuda()
 
     model = nn.DataParallel(model).to(device)
+    # if not is_code_development():
+    #     model = nn.DataParallel(model).cuda()
 
     params = []
     for key, value in dict(model.named_parameters()).items():

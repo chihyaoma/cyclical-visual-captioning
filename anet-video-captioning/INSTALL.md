@@ -22,12 +22,14 @@ conda create -n cyclical python=3.7
 
 conda create -n cyclical-torch1.3 python=3.6
 conda create -n cyclical-torch1.1 python=3.6
+conda create -n cyclical-torch1.5 python=3.7
 
 
 # activate the enviorment
 conda activate cyclical
 conda activate cyclical-torch1.3
 conda activate cyclical-torch1.1
+conda activate cyclical-torch1.5
 
 
 # install addtional packages

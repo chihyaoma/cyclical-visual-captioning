@@ -33,7 +33,6 @@ val_images_use: -1
 optim: 'adam'
 
 cuda: False
-# cuda: True
 mGPUs: False
 
 # training setting

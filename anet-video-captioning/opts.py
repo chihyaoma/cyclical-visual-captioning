@@ -12,7 +12,7 @@ from cycle_utils import is_code_development
 def parse_opt():
     parser = argparse.ArgumentParser()
     # Data input settings
-    parser.add_argument('--path_opt', type=str, default='',
+    parser.add_argument('--path_opt', type=str, default='cfgs/baseline.yml',
                     help='')
     parser.add_argument('--dataset', type=str, default='anet',
                     help='')
