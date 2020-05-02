@@ -24,7 +24,6 @@ data_path: 'data/anet/'
 num_prop_per_frm: 20
 
 # language model
-#att_model: topdown
 att_model: cyclical
 
 num_layers: 1

@@ -51,7 +51,6 @@ resume: False
 load_best_score: 1 # load from the best model
 
 # language model
-#att_model: topdown
 att_model: cyclical
 num_layers: 1
 seq_per_img: 1

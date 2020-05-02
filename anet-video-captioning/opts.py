@@ -132,9 +132,6 @@ def parse_opt():
                     help='whether evaluate object grounding accuracy')
     parser.add_argument('--eval_obj_grounding', action='store_true',
                     help='whether evaluate object grounding accuracy')
-    # parser.add_argument('--vis_attn', action='store_true', help='visualize attention')
-    parser.add_argument('--enable_visdom', action='store_true')
-    parser.add_argument('--visdom_server', type=str, default='', help='update it with your server url')
 
     # parser.add_argument('--val_images_use', type=int, default=5000,
     #                 help='how many segments to use when periodically evaluating the validation loss? (-1 = all)')
@@ -150,10 +147,6 @@ def parse_opt():
                     help='how many iteration to display an loss.')       
     parser.add_argument('--losses_log_every', type=int, default=10,
                     help='how many iteration for log.')
-    # parser.add_argument('--det_oracle', action='store_true',
-    #                 help='whether use oracle bounding box.')
-    # parser.add_argument('--frm_oracle', action='store_true',
-    #                 help='whether use oracle frame.')
     parser.add_argument('--seed', type=int, default=123)
 
     # add customized arguments for cyclical training

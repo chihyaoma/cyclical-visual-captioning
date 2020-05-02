@@ -78,7 +78,6 @@ resume: True
 load_best_score: 1
 
 # language model
-#att_model: topdown
 att_model: cyclical
 num_layers: 1
 seq_per_img: 1

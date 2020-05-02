@@ -32,7 +32,6 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 import opts
 import misc.utils as utils
-# import misc.AttModel as AttModel
 
 from cycle_utils import is_code_development
 from model.create_model import build_model
@@ -52,7 +51,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # visualization over generated sentences
-def vis_infer(seg_show, seg_id, caption, att2_weights, proposals, num_box, gt_bboxs, sim_mat, seg_dim_info):
+def vis_infer(seg_show, seg_id, caption, att2_weights, proposals, num_box, 
+        gt_bboxs, sim_mat, seg_dim_info):
     cap = caption.split()
     output = []
     top_k_prop = 1  # plot the top 1 proposal only
@@ -107,7 +107,8 @@ def eval_grounding(opt, vis=None):
 
     for step in range(len(dataloader_val)):
         data = data_iter.next()
-        seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, region_feat, frm_mask, sample_idx, ppl_mask = data
+        seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, \
+            region_feat, frm_mask, sample_idx, ppl_mask = data
 
         proposals = proposals[:, :max(int(max(num[:, 1])), 1), :]
         ppl_mask = ppl_mask[:, :max(int(max(num[:, 1])), 1)]
@@ -249,7 +250,8 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
             break
 
         data = data_iter.next()
-        seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, region_feat, frm_mask, sample_idx, ppl_mask = data
+        seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, \
+            region_feat, frm_mask, sample_idx, ppl_mask = data
         proposals = proposals[:, :max(int(max(num[:, 1])), 1), :]
         ppl_mask = ppl_mask[:, :max(int(max(num[:, 1])), 1)]
         bboxs = bboxs[:, :max(int(max(num[:, 2])), 1), :]
@@ -277,10 +279,9 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
 
         loss = 0
         if opt.att_model == 'cyclical':
-            # training_output = model(segs_feat, input_seqs, gt_seqs, input_num, input_ppls, gt_bboxs, mask_bboxs,
-            #                         ppls_feat, mask_frms, sample_idx, pnt_mask, 'MLE')
-            training_output = model(segs_feat, input_seqs, gt_seqs, input_num, input_ppls, gt_bboxs, mask_bboxs,
-                                    ppls_feat, mask_frms, sample_idx, pnt_mask)
+            training_output = model(segs_feat, input_seqs, gt_seqs, input_num,
+                input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms, 
+                sample_idx, pnt_mask)
 
             if opt.train_decoder_only:
                 lm_loss, att2_loss, ground_loss, cls_loss = training_output
@@ -288,9 +289,7 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                 lm_loss, att2_loss, ground_loss, cls_loss, lm_recon_loss = training_output
 
         else:
-            lm_loss, att2_loss, ground_loss, cls_loss = model(segs_feat, input_seqs, gt_seqs, input_num,
-                                                            input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms,
-                                                            sample_idx, pnt_mask, 'MLE')
+            raise ValueError('Unknown att_model: {}'.format(opt.att_model))
 
         # record loss to avg. meters here
         tb_step = opt.batch_size * opt.seq_per_img
@@ -352,8 +351,10 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                   'Attn Loss {attn_loss.val:.4f} ({attn_loss.avg:.4f})\t'
                   'Cls Loss {cls_loss.val:.4f} ({cls_loss.avg:.4f})\t'
                   'Recon Loss {recon_loss.val:.4f} ({recon_loss.avg:.4f})\t'
-                  .format(epoch, step, len(dataloader) - 1, batch_time=batch_time, data_time=data_time,
-                          lm_loss=lm_losses, attn_loss=attn_losses, cls_loss=cls_losses, recon_loss=lm_recon_losses))
+                  .format(epoch, step, len(dataloader) - 1,
+                  batch_time=batch_time, data_time=data_time,
+                  lm_loss=lm_losses, attn_loss=attn_losses,
+                  cls_loss=cls_losses, recon_loss=lm_recon_losses))
 
         lm_losses.update(lm_loss.item(), tb_step)
         attn_losses.update(att2_loss.item(), tb_step)
@@ -363,38 +364,6 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
         if (iteration % opt.losses_log_every == 0):
             loss_history[iteration] = loss.item()
             lr_history[iteration] = opt.learning_rate
-
-        # if opt.enable_visdom:
-        #     if vis_window['iter'] is None:
-        #         vis_window['iter'] = vis.line(
-        #             X=np.tile(np.arange(epoch * nbatches + step, epoch * nbatches + step + 1),
-        #                       (5, 1)).T,
-        #             Y=np.column_stack((np.asarray(np.mean(train_loss)),
-        #                                np.asarray(np.mean(lm_loss_temp)),
-        #                                np.asarray(np.mean(att2_loss_temp)),
-        #                                np.asarray(np.mean(ground_loss_temp)),
-        #                                np.asarray(np.mean(cls_loss_temp)))),
-        #             opts=dict(title='Training Loss',
-        #                       xlabel='Training Iteration',
-        #                       ylabel='Loss',
-        #                       legend=['total', 'lm', 'attn', 'grd', 'cls'])
-        #         )
-        #     else:
-        #         vis.line(
-        #             X=np.tile(np.arange(epoch * nbatches + step, epoch * nbatches + step + 1),
-        #                       (5, 1)).T,
-        #             Y=np.column_stack((np.asarray(np.mean(train_loss)),
-        #                                np.asarray(np.mean(lm_loss_temp)),
-        #                                np.asarray(np.mean(att2_loss_temp)),
-        #                                np.asarray(np.mean(ground_loss_temp)),
-        #                                np.asarray(np.mean(cls_loss_temp)))),
-        #             opts=dict(title='Training Loss',
-        #                       xlabel='Training Iteration',
-        #                       ylabel='Loss',
-        #                       legend=['total', 'lm', 'attn', 'grd', 'cls']),
-        #             win=vis_window['iter'],
-        #             update='append'
-        #         )
 
     if tb_logger:
         tb_logger.add_scalar('train/learning_rate',
@@ -435,10 +404,6 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                 break
 
             data = data_iter_val.next()
-            # if opt.vis_attn:
-            #     raise NotImplementedError()
-            #     # seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, seg_show, seg_dim_info, region_feat, frm_mask, sample_idx, ppl_mask = data
-            # else:
             seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, region_feat, frm_mask, \
                 sample_idx, ppl_mask = data
 
@@ -472,24 +437,24 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
 
             if opt.att_model == 'cyclical':
                 seq, att2_weights, sim_mat = model(segs_feat, input_seqs, gt_seqs, input_num,
-                                                    input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms,
-                                                    sample_idx, pnt_mask,
-                                                    True)
-                    # lang_eval=True)
+                                                   input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms,
+                                                   sample_idx, pnt_mask,
+                                                   True)
+                # lang_eval=True)
             else:
                 seq, att2_weights, sim_mat = model(segs_feat, dummy, dummy, input_num,
-                                                input_ppls, dummy, dummy, ppls_feat, dummy, sample_idx, pnt_mask,
-                                                'sample', eval_opt)
+                                                   input_ppls, dummy, dummy, ppls_feat, dummy, sample_idx, pnt_mask,
+                                                   'sample', eval_opt)
 
             # save localization results on generated sentences
             if opt.eval_obj_grounding:
                 assert opt.beam_size == 1, 'only support beam_size is 1'
 
                 att2_ind = torch.max(att2_weights.view(batch_size, att2_weights.size(1),
-                                                    opt.num_sampled_frm, opt.num_prop_per_frm), dim=-1)[1]
+                                                       opt.num_sampled_frm, opt.num_prop_per_frm), dim=-1)[1]
                 obj_bbox_att2 = torch.gather(input_ppls.view(-1, opt.num_sampled_frm, opt.num_prop_per_frm, 7)
-                                            .permute(0, 2, 1, 3).contiguous(), 1,
-                                            att2_ind.unsqueeze(-1).expand((batch_size,
+                                             .permute(0, 2, 1, 3).contiguous(), 1,
+                                             att2_ind.unsqueeze(-1).expand((batch_size,
                                                                             att2_ind.size(
                                                                                 1), opt.num_sampled_frm,
                                                                             input_ppls.size(-1))))  # Bx20x10x7
@@ -498,7 +463,7 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                     vid_id, seg_idx = seg_id[i].split('_segment_')
                     seg_idx = str(int(seg_idx))
                     tmp_result = {'clss': [], 'idx_in_sent': [],
-                                'bbox_for_all_frames': []}
+                                  'bbox_for_all_frames': []}
 
                     for j in range(seq.size(1)):
                         if seq[i, j].item() != 0:
@@ -515,7 +480,7 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                     grd_output[vid_id][seg_idx] = tmp_result
 
             sents = utils.decode_sequence(dataset.itow, dataset.itod, dataset.ltow, dataset.itoc,
-                                        dataset.wtod, seq.data, opt.vocab_size, opt)
+                                          dataset.wtod, seq.data, opt.vocab_size, opt)
 
             for k, sent in enumerate(sents):
                 vid_idx, seg_idx = seg_id[k].split('_segment_')
@@ -523,21 +488,11 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
 
                 predictions[vid_idx].append(
                     {'sentence': sent,
-                    'timestamp': raw_caption_file[vid_idx]['timestamps'][seg_idx]})
+                     'timestamp': raw_caption_file[vid_idx]['timestamps'][seg_idx]})
 
                 if num_show < 20:
                     print('segment %s: %s' % (seg_id[k], sent))
                     num_show += 1
-
-                # # visualization
-                # if opt.vis_attn:
-                #     assert (opt.beam_size == 1)  # only support beam_size=1
-                #     att2_weights = F.softmax(att2_weights, dim=2)
-                #     # visualize some selected examples
-                #     if torch.sum(proposals[k]) != 0:
-                #         vis_infer(seg_show[k], seg_id[k], sent,
-                #                   att2_weights[k].cpu().data, proposals[k], num[k].long(),
-                #                   bboxs[k], sim_mat[k].cpu().data, seg_dim_info[k])
 
             # measure elapsed time
             batch_time.update(time.time() - end)
@@ -609,22 +564,12 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                                         opt.val_split],
                                     iou_thresh=0.5)
 
-            # print('\nResults Summary (generated sent):')
-            # print('Printing attention accuracy on generated sentences (per video) ...')
-            # prec_all_per_video, rec_all_per_video, f1_all_per_video = evaluator.grd_eval_per_img(
-            #     mode='all')
-            # prec_loc_per_video, rec_loc_per_video, f1_locl_per_video = evaluator.grd_eval_per_img(
-            #     mode='loc')
-
-            # print('\nResults Summary (generated sent):')
-            # print('Printing attention accuracy on generated sentences...')
-            # prec_all, recall_all, f1_all = evaluator.grd_eval(mode='all')
-            # prec_loc, recall_loc, f1_loc = evaluator.grd_eval(mode='loc')
-
             print('\nResults Summary (generated sent):')
             print('Printing attention accuracy on generated sentences, per class and per sentence, respectively...')
-            prec_all, recall_all, f1_all, prec_all_per_sent, rec_all_per_sent, f1_all_per_sent = evaluator.grd_eval(mode='all')
-            prec_loc, recall_loc, f1_loc, prec_loc_per_sent, rec_loc_per_sent, f1_loc_per_sent = evaluator.grd_eval(mode='loc')
+            prec_all, recall_all, f1_all, prec_all_per_sent, rec_all_per_sent, \
+                f1_all_per_sent = evaluator.grd_eval(mode='all')
+            prec_loc, recall_loc, f1_loc, prec_loc_per_sent, rec_loc_per_sent, \
+                f1_loc_per_sent = evaluator.grd_eval(mode='loc')
         else:
             print('*'*62)
             print('*  [WARNING] Grounding eval unavailable for the test set!\
@@ -658,43 +603,6 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
     else:
         box_accu_att, box_accu_grd, cls_accu = 0, 0, 0
 
-    if opt.enable_visdom:
-        assert (opt.language_eval)
-        if vis_window['score'] is None:
-            vis_window['score'] = vis.line(
-                X=np.tile(np.arange(epoch, epoch + 1),
-                          (7, 1)).T,
-                Y=np.column_stack((np.asarray(box_accu_att),
-                                   np.asarray(box_accu_grd),
-                                   np.asarray(cls_accu),
-                                   np.asarray(lang_stats['Bleu_4']),
-                                   np.asarray(lang_stats['METEOR']),
-                                   np.asarray(lang_stats['CIDEr']),
-                                   np.asarray(lang_stats['SPICE']))),
-                opts=dict(title='Validation Score',
-                          xlabel='Validation Epoch',
-                          ylabel='Score',
-                          legend=['BA (alpha)', 'BA (beta)', 'CLS Accu', 'Bleu_4', 'METEOR', 'CIDEr', 'SPICE'])
-            )
-        else:
-            vis.line(
-                X=np.tile(np.arange(epoch, epoch + 1),
-                          (7, 1)).T,
-                Y=np.column_stack((np.asarray(box_accu_att),
-                                   np.asarray(box_accu_grd),
-                                   np.asarray(cls_accu),
-                                   np.asarray(lang_stats['Bleu_4']),
-                                   np.asarray(lang_stats['METEOR']),
-                                   np.asarray(lang_stats['CIDEr']),
-                                   np.asarray(lang_stats['SPICE']))),
-                opts=dict(title='Validation Score',
-                          xlabel='Validation Epoch',
-                          ylabel='Score',
-                          legend=['BA (alpha)', 'BA (beta)', 'CLS Accu', 'Bleu_4', 'METEOR', 'CIDEr', 'SPICE']),
-                win=vis_window['score'],
-                update='append'
-            )
-
     print('Saving the predictions')
 
     # Write validation result into summary
@@ -721,7 +629,6 @@ if __name__ == '__main__':
     opt.input_dic = opt.data_path + opt.input_dic
     opt.input_raw_cap = opt.data_path + opt.input_raw_cap
     opt.seg_feature_root = opt.data_path + opt.seg_feature_root
-    # opt.image_path = opt.data_path + opt.image_path
     opt.feature_root = opt.data_path + opt.feature_root
     opt.proposal_h5 = opt.data_path + opt.proposal_h5
     opt.densecap_references = [
@@ -733,19 +640,11 @@ if __name__ == '__main__':
 
     cudnn.benchmark = True
 
-    if opt.enable_visdom:
-        import visdom
-
-        vis = visdom.Visdom(server=opt.visdom_server, env=opt.id)
-        vis_window = {'iter': None, 'score': None}
-
     torch.manual_seed(opt.seed)
     np.random.seed(opt.seed)
     random.seed(opt.seed)
     if opt.cuda:
         torch.cuda.manual_seed_all(opt.seed)
-    # if opt.vis_attn:
-    #     import cv2
 
     if opt.dataset == 'anet':
         from misc.dataloader_anet import DataLoader
@@ -763,12 +662,15 @@ if __name__ == '__main__':
     h5_proposal_file.close()
 
     # Data Loader
-    dataset = DataLoader(opt, split=opt.train_split, seq_per_img=opt.seq_per_img, num_proposals=num_proposals,
+    dataset = DataLoader(opt, split=opt.train_split, seq_per_img=opt.seq_per_img, 
+                         num_proposals=num_proposals,
                          label_proposals=label_proposals)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batch_size,
-                                             shuffle=True, num_workers=opt.num_workers)
+                                             shuffle=True,
+                                             num_workers=opt.num_workers)
 
-    dataset_val = DataLoader(opt, split=opt.val_split, seq_per_img=opt.seq_per_img, num_proposals=num_proposals,
+    dataset_val = DataLoader(opt, split=opt.val_split, seq_per_img=opt.seq_per_img, 
+                             num_proposals=num_proposals,
                              label_proposals=label_proposals)
     dataloader_val = torch.utils.data.DataLoader(dataset_val, batch_size=opt.batch_size,
                                                  shuffle=False, num_workers=opt.num_workers)
@@ -790,12 +692,7 @@ if __name__ == '__main__':
     opt.wtol = dataset.wtol
     opt.wtod = dataset.wtod
     opt.vg_cls = dataset.vg_cls
-    # opt.i_to_visually_groundable = dataset.i_to_visually_groundable
 
-    # if opt.att_model == 'topdown':
-    #     model = AttModel.TopDownModel(opt)
-    # elif opt.att_model == 'transformer':
-    #     model = AttModel.TransformerModel(opt)
     if opt.att_model == 'cyclical':
         model = build_model(opt, device)
     else:
@@ -849,14 +746,7 @@ if __name__ == '__main__':
     lr_history = histories.get('lr_history', {})
     ss_prob_history = histories.get('ss_prob_history', {})
 
-    # if opt.mGPUs:
-    #     model = nn.DataParallel(model)
-    # if opt.cuda:
-    #     model.cuda()
-
     model = nn.DataParallel(model).to(device)
-    # if not is_code_development():
-    #     model = nn.DataParallel(model).cuda()
 
     params = []
     for key, value in dict(model.named_parameters()).items():
@@ -900,24 +790,12 @@ if __name__ == '__main__':
     }
 
     for epoch in range(start_epoch, opt.max_epochs):
-        # if epoch > opt.learning_rate_decay_start and opt.learning_rate_decay_start >= 0:
-        #     if (epoch - opt.learning_rate_decay_start) % opt.learning_rate_decay_every == 0:
-        #         # decay the learning rate.
-        #         utils.set_lr(optimizer, opt.learning_rate_decay_rate)
-        #         opt.learning_rate = opt.learning_rate * opt.learning_rate_decay_rate
-
         if not opt.inference_only:
-            if opt.enable_visdom:
-                train(epoch, opt, vis, vis_window)
-            else:
-                train(epoch, opt, tb_logger=tb_logger)
+            train(epoch, opt, tb_logger=tb_logger)
 
         if epoch % opt.val_every_epoch == 0:
             with torch.no_grad():
-                if opt.enable_visdom:
-                    lang_stats = eval(epoch, opt, vis, vis_window)
-                else:
-                    lang_stats = eval(epoch, opt, tb_logger=tb_logger)
+                lang_stats = eval(epoch, opt, tb_logger=tb_logger)
 
             if opt.inference_only:
                 break
@@ -938,8 +816,6 @@ if __name__ == '__main__':
             else:
                 torch.save(model.state_dict(), checkpoint_path)
             print("model saved to {}".format(checkpoint_path))
-            # optimizer_path = os.path.join(opt.checkpoint_path, 'optimizer.pth')
-            # torch.save(optimizer.state_dict(), optimizer_path)
 
             # Dump miscalleous informations
             infos['iter'] = iteration
