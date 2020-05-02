@@ -11,7 +11,10 @@ Use the following command to start the training of our baseline model.
 ```shell
 CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --path_opt 'cfgs/baseline.yml'
 
-CUDA_VISIBLE_DEVICES=0,1 python main.py
+CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/baseline.yml'
+CUDA_VISIBLE_DEVICES=2,3 python main.py --path_opt 'cfgs/baseline.yml'
+
+CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/cyclical.yml'
 ```
 
 ## Evaluation

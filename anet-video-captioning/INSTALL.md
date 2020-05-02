@@ -45,6 +45,7 @@ conda install -c pytorch torchtext
 (segmentation fault) conda install pytorch==1.3.0 torchvision==0.4.1 cudatoolkit=10.0 -c pytorch  
 conda install pytorch==1.2.0 torchvision==0.4.0 cudatoolkit=10.0 -c pytorch
 conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch
+conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=9.0 -c pytorch
 
 conda install pytorch==1.1.0 torchvision==0.3.0 -c pytorch  # for MacOS
 
@@ -93,4 +94,10 @@ ImportError: cannot import name 'PILLOW_VERSION'
 
 # install pillow with version older than 7.0.0
 pip install "pillow<7"
+```
+
+#### Use torch.save instead of pickle.dump
+
+```shell
+warnings.warn("pickle support for Storage will be removed in 1.5. Use `torch.save` instead", FutureWarning)
 ```

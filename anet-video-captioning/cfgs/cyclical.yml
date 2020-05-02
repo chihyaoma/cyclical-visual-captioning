@@ -17,12 +17,12 @@ densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
 # data_path: '/srv/datasets/activityNet/anet-entities/'  # skynet
 # data_path: "/coc/scratch/cma64/anet-entities/" # skynet
 # data_path: '/datasets/cma64/anet/'  # ripl-w1
-data_path: /home/temp/cma64/anet-entities/ # ripl-s1
-# data_path: 'data/anet/'  # ripl-w6
+# data_path: /home/temp/cma64/anet-entities/ # ripl-s1
+data_path: 'data/anet/'  # ripl-w6
 
 # training and eval setting
 # exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2-seed_123
-exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_50
+# exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_50
 # exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2-seed_1
 #exp_name: 20191111-cyclical-softattn_additive-resume_roi-BS_32-cpu_8-LR_1e-4-epoch_100-riplw6-seed_1
 # exp_name: 20191112-cyclical-softattn_additive-localizer_only_groundable-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw1-seed_1
@@ -31,19 +31,23 @@ exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epo
 # exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
 # exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
 # exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
+# exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
+# exp_name: 20200430-torch1.5-cyclical-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1
+# exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1
+exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_123
 
 # id: '1'
 
-seed: 50
+seed: 123
 densecap_verbose: True
 disp_interval: 1
 
 # evaluating options
 language_eval: True
-eval_obj_grounding: True
+eval_obj_grounding: False
 eval_obj_grounding_gt: False
-inference_only: True
-resume: True
+inference_only: False
+resume: False
 load_best_score: 1 # load from the best model
 
 # language model
@@ -61,13 +65,14 @@ max_epochs: 100
 # batch_size: 256 # OOM
 # batch_size: 192  # dataloading is slow
 # num_workers: 2
-#batch_size: 64
+# batch_size: 64
+batch_size: 48
 # batch_size: 8
 #batch_size: 24
 #batch_size: 32
 
-batch_size: 96
-num_workers: 6
+# batch_size: 96
+num_workers: 8
 # batch_size: 8
 # num_workers: 0
 cuda: True
@@ -84,9 +89,9 @@ embedding_vocab_plus_1: False
 train_decoder_only: False
 # resume_decoder_exp_name: 20190826-baseline-BS|96-cpu|8-LR|1e-4-epoch|100-skynet-seed|123
 # resume_decoder_exp_name: 20190826-baseline-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
-resume_decoder_exp_name: 20190908-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
-resume_embed: 0
-resume_logit: 0
+resume_decoder_exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
+resume_embed: 1
+resume_logit: 1
 resume_roi_extractor: 1
 
 # localizer

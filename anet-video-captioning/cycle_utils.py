@@ -35,7 +35,7 @@ def resume_decoder_roiextractor(opts, exp_name, decoder, embed, logit, roi_extra
     if os.path.isfile(resume_file_name):
 
         # open old infos and check if models are compatible
-        with open(info_path) as f:
+        with open(info_path, 'rb') as f:
             infos = pickle.load(f)
         opts.start_epoch = infos.get('epoch', 0)
 

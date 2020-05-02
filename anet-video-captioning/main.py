@@ -602,23 +602,35 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                  },
                 f)
 
-        # offline eval
-        evaluator = ANetGrdEval(reference_file=opt.grd_reference, submission_file=attn_file,
-                                split_file=opt.split_file, val_split=[
-                                    opt.val_split],
-                                iou_thresh=0.5)
+        if not opt.test_mode:
+            # offline eval
+            evaluator = ANetGrdEval(reference_file=opt.grd_reference, submission_file=attn_file,
+                                    split_file=opt.split_file, val_split=[
+                                        opt.val_split],
+                                    iou_thresh=0.5)
 
-        print('\nResults Summary (generated sent):')
-        print('Printing attention accuracy on generated sentences (per video) ...')
-        prec_all_per_video, rec_all_per_video, f1_all_per_video = evaluator.grd_eval_per_img(
-            mode='all')
-        prec_loc_per_video, rec_loc_per_video, f1_locl_per_video = evaluator.grd_eval_per_img(
-            mode='loc')
+            # print('\nResults Summary (generated sent):')
+            # print('Printing attention accuracy on generated sentences (per video) ...')
+            # prec_all_per_video, rec_all_per_video, f1_all_per_video = evaluator.grd_eval_per_img(
+            #     mode='all')
+            # prec_loc_per_video, rec_loc_per_video, f1_locl_per_video = evaluator.grd_eval_per_img(
+            #     mode='loc')
 
-        print('\nResults Summary (generated sent):')
-        print('Printing attention accuracy on generated sentences...')
-        prec_all, recall_all, f1_all = evaluator.grd_eval(mode='all')
-        prec_loc, recall_loc, f1_loc = evaluator.grd_eval(mode='loc')
+            # print('\nResults Summary (generated sent):')
+            # print('Printing attention accuracy on generated sentences...')
+            # prec_all, recall_all, f1_all = evaluator.grd_eval(mode='all')
+            # prec_loc, recall_loc, f1_loc = evaluator.grd_eval(mode='loc')
+
+            print('\nResults Summary (generated sent):')
+            print('Printing attention accuracy on generated sentences, per class and per sentence, respectively...')
+            prec_all, recall_all, f1_all, prec_all_per_sent, rec_all_per_sent, f1_all_per_sent = evaluator.grd_eval(mode='all')
+            prec_loc, recall_loc, f1_loc, prec_loc_per_sent, rec_loc_per_sent, f1_loc_per_sent = evaluator.grd_eval(mode='loc')
+        else:
+            print('*'*62)
+            print('*  [WARNING] Grounding eval unavailable for the test set!\
+    *\n*            Please submit your result files under directory *\
+     \n*            results/ to the eval server!                    *')
+            print('*'*62)
 
         if tb_logger:
             tb_logger.add_scalar(
@@ -803,7 +815,7 @@ if __name__ == '__main__':
                 opt.checkpoint_path, 'infos_' + opt.id + '.pkl')
 
         # open old infos and check if models are compatible
-        with open(info_path) as f:
+        with open(info_path, 'rb') as f:
             infos = pickle.load(f)
             saved_model_opt = infos['opt']
 
@@ -821,7 +833,7 @@ if __name__ == '__main__':
                 model_path, map_location=lambda storage, loc: storage))
 
         if os.path.isfile(os.path.join(opt.checkpoint_path, 'histories_' + opt.id + '.pkl')):
-            with open(os.path.join(opt.checkpoint_path, 'histories_' + opt.id + '.pkl')) as f:
+            with open(os.path.join(opt.checkpoint_path, 'histories_' + opt.id + '.pkl'), 'rb') as f:
                 histories = pickle.load(f)
 
     best_val_score = infos.get('best_val_score', None)

@@ -94,9 +94,11 @@ class DecodeAndGroundCaptionerGVDROI(nn.Module):
         # self.i_to_visually_groundable = opts.i_to_visually_groundable
 
     def init_hidden(self, batch_size, num_layers):
-        weight = next(self.parameters()).data
-        return (weight.new(num_layers, batch_size, self.rnn_size).zero_(),
-                weight.new(num_layers, batch_size, self.rnn_size).zero_())
+        # weight = next(self.parameters()).data
+        # return (weight.new(num_layers, batch_size, self.rnn_size).zero_(),
+        #         weight.new(num_layers, batch_size, self.rnn_size).zero_())
+        return (torch.zeros(num_layers, batch_size, self.rnn_size).to(self.device),
+                torch.zeros(num_layers, batch_size, self.rnn_size).to(self.device))
 
     def obj_grounding(self, att_weights, seq, targets):
         """
