@@ -2,8 +2,8 @@ import os
 import sys
 import time
 import json
-from collections import defaultdict
 import numpy as np
+from collections import defaultdict
 
 import torch
 import torch.nn as nn
@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.join(
     _SCRIPTPATH_, 'tools/densevid_eval/coco-caption'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
 
-from evaluate import ANETcaptions
 from eval_grd_anet_entities import ANetGrdEval
+from evaluate import ANETcaptions
 
 
 class Trainer():
@@ -66,7 +66,6 @@ class Trainer():
             region_feat = region_feat[:, :max(int(max(num[:, 1])), 1), :]
 
             # move inputs to device, e.g., cpu or gpu
-            # TODO: not sure why `seg_feat` was in double format
             segs_feat = seg_feat.float().to(self.device)
             input_seqs = iseq.to(self.device)
             gt_seqs = gts_seq.to(self.device)
@@ -174,7 +173,6 @@ class Trainer():
                 ppl_mask = ppl_mask[:, :max(int(max(num[:, 1])), 1)]
                 region_feat = region_feat[:, :max(int(max(num[:, 1])), 1), :]
 
-                # TODO: not sure why `seg_feat` was in double format
                 segs_feat = seg_feat.float().to(self.device)
                 input_num = num.to(self.device)
                 input_ppls = proposals.to(self.device)
@@ -299,7 +297,7 @@ class Trainer():
                     tb_logger.add_scalar(
                         'lang_eval/{}/{}'.format(self.opts.val_split, metric), score, epoch)
 
-        if self.opts.test_mode and (self.opts.eval_obj_grounding or self.opts.eval_obj_grounding_gt):
+        if self.opts.test_mode and self.opts.eval_obj_grounding:
             print('*' * 62)
             print('*  [WARNING] Grounding eval unavailable for the test set!\
         *\n*            Please submit your results to the eval server!  *')
@@ -353,21 +351,5 @@ class Trainer():
                 tb_logger.add_scalar(
                     'grounding_{}/f1_loc'.format(self.opts.val_split), f1_loc, epoch)
 
-        if self.opts.att_model == 'topdown' and self.opts.eval_obj_grounding_gt:
-            with torch.no_grad():
-                box_accu_att, box_accu_grd, cls_accu = eval_grounding(
-                    opt)  # eval grounding
-                print('\nResults Summary (GT sent):')
-                print('The averaged attention / grounding box accuracy across all classes is: {:.4f} / {:.4f}'.format(
-                    box_accu_att, box_accu_grd))
-                print('The averaged classification accuracy across all classes is: {:.4f}\n'.format(
-                    cls_accu))
-        else:
-            box_accu_att, box_accu_grd, cls_accu = 0, 0, 0
-
-        # print('Saving the predictions')
-        # Write validation result into summary
-        # val_result_history[iteration] = {
-        #     'lang_stats': lang_stats, 'predictions': predictions}
-
         return lang_stats
+

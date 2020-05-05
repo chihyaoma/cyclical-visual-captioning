@@ -46,7 +46,6 @@ disp_interval: 1
 # evaluating options
 language_eval: True
 eval_obj_grounding: True
-eval_obj_grounding_gt: False
 inference_only: True
 resume: True
 load_best_score: 1 # load from the best model

@@ -51,7 +51,6 @@ grounding_annotation_amount: 0
 # evaluating options
 language_eval: False
 eval_obj_grounding: False
-eval_obj_grounding_gt: False
 inference_only: False
 resume: False
 load_best_score: 1

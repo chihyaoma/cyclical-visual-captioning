@@ -25,8 +25,6 @@ def parse_opt():
                         help='path to the json containing the preprocessed dataset')
     parser.add_argument('--input_raw_cap', type=str, default='',
                         help='path to ActivityNet Captions dataset file')
-    # parser.add_argument('--image_path', type=str, default='',
-    #                 help='path to the h5file containing the image data')
     parser.add_argument('--proposal_h5', type=str, default='',
                         help='path to the json containing the detection result.')
     parser.add_argument('--feature_root', type=str, default='',
@@ -141,14 +139,8 @@ def parse_opt():
                         default='tools/anet_entities/data/anet_entities_cleaned_class_thresh50_trainval.json')
     parser.add_argument('--split_file', type=str,
                         default='tools/anet_entities/data/split_ids_anet_entities.json')
-
-    parser.add_argument('--eval_obj_grounding_gt', action='store_true',
-                        help='whether evaluate object grounding accuracy')
     parser.add_argument('--eval_obj_grounding', action='store_true',
                         help='whether evaluate object grounding accuracy')
-
-    # parser.add_argument('--val_images_use', type=int, default=5000,
-    #                 help='how many segments to use when periodically evaluating the validation loss? (-1 = all)')
     parser.add_argument('--val_every_epoch', type=int, default=1,
                         help='how many epoch to periodically evaluate the validation loss? (-1 = all)')
     parser.add_argument('--checkpoint_path', type=str, default='save/',
