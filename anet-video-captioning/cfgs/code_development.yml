@@ -8,17 +8,17 @@ dataset: anet
 # feature_root: 'data/anet/fc6_feat_100rois'
 # proposal_h5: 'data/anet/anet_detection_vg_fc6_feat_100rois.h5'
 
-input_json: 'anet_entities_prep/cap_anet_trainval.json'
-input_dic: 'anet_entities_prep/dic_anet.json'
-input_raw_cap: 'anet_captions_all_splits.json'
+input_json: "anet_entities_prep/cap_anet_trainval.json"
+input_dic: "anet_entities_prep/dic_anet.json"
+input_raw_cap: "anet_captions_all_splits.json"
 # image_path: 'frames_10frm' # for visualization only
-proposal_h5: 'anet_detection_vg_fc6_feat_100rois.h5'
+proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
 # densecap_references: ['anet_entities_captions/anet_entities_val_1.json', 'anet_entities_captions/anet_entities_val_2.json']
-densecap_references: ['anet_entities_val_1.json', 'anet_entities_val_2.json']
-seg_feature_root: 'dummy_rgb_motion_1d'
-feature_root: 'dummy_fc6_feat_100rois'
+densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
+seg_feature_root: "dummy_rgb_motion_1d"
+feature_root: "dummy_fc6_feat_100rois"
 
-data_path: 'data/anet/'
+data_path: "data/anet/"
 
 #num_prop_per_frm: 100
 num_prop_per_frm: 20
@@ -29,7 +29,7 @@ att_model: cyclical
 num_layers: 1
 seq_per_img: 1
 val_images_use: -1
-optim: 'adam'
+optim: "adam"
 
 cuda: False
 mGPUs: False
@@ -44,7 +44,7 @@ num_workers: 0
 exp_name: local_dev
 #exp_name: 20190902-cyclical-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet_ripls1-seed_123
 seed: 1
-densecap_verbose: True
+densecap_verbose: False
 disp_interval: 1
 grounding_annotation_amount: 0
 
@@ -57,7 +57,7 @@ resume: False
 load_best_score: 1
 
 # model
-softattn_type: 'additive'
+softattn_type: "additive"
 obj_interact: False
 embedding_vocab_plus_1: False
 

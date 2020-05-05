@@ -18,7 +18,7 @@ densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
 # data_path: "/coc/scratch/cma64/anet-entities/" # skynet
 # data_path: '/datasets/cma64/anet/'  # ripl-w1
 # data_path: /home/temp/cma64/anet-entities/ # ripl-s1
-data_path: 'data/anet/'  # ripl-w6
+data_path: "data/anet/" # ripl-w6
 
 # training and eval setting
 # exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2-seed_123
@@ -34,20 +34,21 @@ data_path: 'data/anet/'  # ripl-w6
 # exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
 # exp_name: 20200430-torch1.5-cyclical-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1
 # exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1
-exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_123
+# exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_123
+exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_50
 
 # id: '1'
 
-seed: 123
+seed: 50
 densecap_verbose: True
 disp_interval: 1
 
 # evaluating options
 language_eval: True
-eval_obj_grounding: False
+eval_obj_grounding: True
 eval_obj_grounding_gt: False
-inference_only: False
-resume: False
+inference_only: True
+resume: True
 load_best_score: 1 # load from the best model
 
 # language model

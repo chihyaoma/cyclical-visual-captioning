@@ -32,9 +32,9 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 import opts
 import misc.utils as utils
-
 from cycle_utils import is_code_development
 from model.create_model import build_model
+from trainer import Trainer
 
 # hack to allow the imports of evaluation repos
 _SCRIPTPATH_ = os.path.dirname(os.path.abspath(__file__))
@@ -44,15 +44,15 @@ sys.path.insert(0, os.path.join(
     _SCRIPTPATH_, 'tools/densevid_eval/coco-caption'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
 
-from evaluate import ANETcaptions
 from eval_grd_anet_entities import ANetGrdEval
+from evaluate import ANETcaptions
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # visualization over generated sentences
-def vis_infer(seg_show, seg_id, caption, att2_weights, proposals, num_box, 
-        gt_bboxs, sim_mat, seg_dim_info):
+def vis_infer(seg_show, seg_id, caption, att2_weights, proposals, num_box,
+              gt_bboxs, sim_mat, seg_dim_info):
     cap = caption.split()
     output = []
     top_k_prop = 1  # plot the top 1 proposal only
@@ -280,8 +280,8 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
         loss = 0
         if opt.att_model == 'cyclical':
             training_output = model(segs_feat, input_seqs, gt_seqs, input_num,
-                input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms, 
-                sample_idx, pnt_mask)
+                                    input_ppls, gt_bboxs, mask_bboxs, ppls_feat, mask_frms,
+                                    sample_idx, pnt_mask)
 
             if opt.train_decoder_only:
                 lm_loss, att2_loss, ground_loss, cls_loss = training_output
@@ -352,9 +352,9 @@ def train(epoch, opt, vis=None, vis_window=None, tb_logger=None):
                   'Cls Loss {cls_loss.val:.4f} ({cls_loss.avg:.4f})\t'
                   'Recon Loss {recon_loss.val:.4f} ({recon_loss.avg:.4f})\t'
                   .format(epoch, step, len(dataloader) - 1,
-                  batch_time=batch_time, data_time=data_time,
-                  lm_loss=lm_losses, attn_loss=attn_losses,
-                  cls_loss=cls_losses, recon_loss=lm_recon_losses))
+                          batch_time=batch_time, data_time=data_time,
+                          lm_loss=lm_losses, attn_loss=attn_losses,
+                          cls_loss=cls_losses, recon_loss=lm_recon_losses))
 
         lm_losses.update(lm_loss.item(), tb_step)
         attn_losses.update(att2_loss.item(), tb_step)
@@ -613,6 +613,7 @@ def eval(epoch, opt, vis=None, vis_window=None, tb_logger=None):
 
 
 if __name__ == '__main__':
+# def main():
 
     opt = opts.parse_opt()
     if opt.path_opt is not None:
@@ -662,14 +663,14 @@ if __name__ == '__main__':
     h5_proposal_file.close()
 
     # Data Loader
-    dataset = DataLoader(opt, split=opt.train_split, seq_per_img=opt.seq_per_img, 
+    dataset = DataLoader(opt, split=opt.train_split, seq_per_img=opt.seq_per_img,
                          num_proposals=num_proposals,
                          label_proposals=label_proposals)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batch_size,
                                              shuffle=True,
                                              num_workers=opt.num_workers)
 
-    dataset_val = DataLoader(opt, split=opt.val_split, seq_per_img=opt.seq_per_img, 
+    dataset_val = DataLoader(opt, split=opt.val_split, seq_per_img=opt.seq_per_img,
                              num_proposals=num_proposals,
                              label_proposals=label_proposals)
     dataloader_val = torch.utils.data.DataLoader(dataset_val, batch_size=opt.batch_size,
@@ -774,6 +775,9 @@ if __name__ == '__main__':
     tb_logger = utils.set_tb_logger(
         opt.tb_log_dir, opt.exp_name, opt.resume) if not opt.inference_only else None
 
+    # set up trainer
+    trainer = Trainer(opt, dataset, model, optimizer, dataloader, dataloader_val)
+
     # set up LR scheduler
     scheduler = ReduceLROnPlateau(
         optimizer, 'max', patience=opt.patience, min_lr=opt.min_lr)
@@ -791,11 +795,13 @@ if __name__ == '__main__':
 
     for epoch in range(start_epoch, opt.max_epochs):
         if not opt.inference_only:
-            train(epoch, opt, tb_logger=tb_logger)
+            trainer.train(epoch, tb_logger=tb_logger)
+            # train(epoch, opt, tb_logger=tb_logger)
 
         if epoch % opt.val_every_epoch == 0:
             with torch.no_grad():
-                lang_stats = eval(epoch, opt, tb_logger=tb_logger)
+                lang_stats = trainer.eval(epoch, tb_logger=tb_logger)
+                # lang_stats = eval(epoch, opt, tb_logger=tb_logger)
 
             if opt.inference_only:
                 break
@@ -854,3 +860,7 @@ if __name__ == '__main__':
             print("--> Highest scores on {} set at epoch {}".format(opt.val_split, epoch))
             for metric, score in sorted(best_score.items()):
                 print('{}: {:.4f}'.format(metric, score))
+
+
+# if __name__ == '__main__':
+#     main()

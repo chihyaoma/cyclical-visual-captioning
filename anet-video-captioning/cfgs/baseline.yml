@@ -49,7 +49,7 @@ data_path: data/anet/ # ripl-w5 & ripl-w6
 # exp_name: 20190909-baseline_sup-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_123
 # exp_name: 20190911-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080-seed_1
 
-# ================ code release ================ 
+# ================ code release ================
 # exp_name: 20200415-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw6_2080-seed_1
 # exp_name: 20200417-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw6_2080-seed_1
 # exp_name: 20200424-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw6_2080_2-seed_1
@@ -60,11 +60,11 @@ data_path: data/anet/ # ripl-w5 & ripl-w6
 # exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 84, stopped manually, runs on GPU #0 & #1
 # exp_name: 20200428-torch1.5-baseline-softattn_additive-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1  # success, runs until epoch 88, stopped manually, runs on GPU #0, #1, #2
 # exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # failed, runs only 5 epochs, stuck during inference
-exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 67, stopped manually, runs on GPU #2, #3
-# ================ code release ================ 
+exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1 # success, runs until epoch 67, stopped manually, runs on GPU #2, #3
+# ================ code release ================
 
 seed: 1
-densecap_verbose: True
+densecap_verbose: False
 disp_interval: 1
 
 grounding_annotation_amount: 0.5
