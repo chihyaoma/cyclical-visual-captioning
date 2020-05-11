@@ -10,7 +10,6 @@ data_path: "data/anet/" # ripl-w6
 
 input_json: "cap_anet_trainval.json"
 input_dic: "dic_anet.json"
-input_raw_cap: "anet_captions_all_splits.json"
 seg_feature_root: "rgb_motion_1d"
 feature_root: "fc6_feat_100rois"
 proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"

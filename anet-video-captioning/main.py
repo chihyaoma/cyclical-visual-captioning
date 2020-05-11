@@ -48,7 +48,6 @@ def main():
 
     opt.input_json = opt.data_path + opt.input_json
     opt.input_dic = opt.data_path + opt.input_dic
-    opt.input_raw_cap = opt.data_path + opt.input_raw_cap
     opt.seg_feature_root = opt.data_path + opt.seg_feature_root
     opt.feature_root = opt.data_path + opt.feature_root
     opt.proposal_h5 = opt.data_path + opt.proposal_h5

@@ -3,7 +3,6 @@ dataset: anet
 data_path: data/anet/
 input_json: "cap_anet_trainval.json"
 input_dic: "dic_anet.json"
-input_raw_cap: "anet_captions_all_splits.json"
 seg_feature_root: "rgb_motion_1d"
 feature_root: "fc6_feat_100rois"
 proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
@@ -23,10 +22,10 @@ densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
 # exp_name: 20200425-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw6_2080_4-seed_1
 # exp_name: 20200426-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
 # exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # with 4 GPUs, runs until 21 epochs, stuck during inference
-# exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 84, stopped manually, runs on GPU #0 & #1
+exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 84, stopped manually, runs on GPU #0 & #1
 # exp_name: 20200428-torch1.5-baseline-softattn_additive-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1  # success, runs until epoch 88, stopped manually, runs on GPU #0, #1, #2
 # exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # failed, runs only 5 epochs, stuck during inference
-exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1 # success, runs until epoch 67, stopped manually, runs on GPU #2, #3
+# exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1 # success, runs until epoch 67, stopped manually, runs on GPU #2, #3
 # ================ code release ================
 
 seed: 1
@@ -35,9 +34,9 @@ disp_interval: 1
 
 # evaluating options
 language_eval: True
-eval_obj_grounding: False
-inference_only: False
-resume: False
+eval_obj_grounding: True
+inference_only: True
+resume: True
 load_best_score: 1
 
 # language model
@@ -55,6 +54,8 @@ optim: "adam"
 max_epochs: 100
 batch_size: 48
 num_workers: 8
+# batch_size: 4
+# num_workers: 0
 
 # model
 softattn_type: "additive"

@@ -150,7 +150,7 @@ class Trainer():
 
         num_show = 0
         predictions = defaultdict(list)
-        raw_caption_file = json.load(open(self.opts.input_raw_cap))
+        timestamp_file = json.load(open(self.opts.grd_reference))
 
         if self.opts.eval_obj_grounding:
             grd_output = defaultdict(dict)
@@ -242,11 +242,13 @@ class Trainer():
 
                 for k, sent in enumerate(sents):
                     vid_idx, seg_idx = seg_id[k].split('_segment_')
-                    seg_idx = int(seg_idx)
+                    seg_idx = str(int(seg_idx))
 
                     predictions[vid_idx].append(
                         {'sentence': sent,
-                         'timestamp': raw_caption_file[vid_idx]['timestamps'][seg_idx]})
+                         'timestamp':[round(timestamp, 2) for timestamp in timestamp_file[ \
+                         'annotations'][vid_idx]['segments'][seg_idx]['timestamps']]}
+                    )
 
                     if num_show < 20:
                         print('segment %s: %s' % (seg_id[k], sent))

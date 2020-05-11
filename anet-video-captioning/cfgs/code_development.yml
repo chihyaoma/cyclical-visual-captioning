@@ -3,7 +3,6 @@ dataset: anet
 data_path: "data/anet/"
 input_json: "anet_entities_prep/cap_anet_trainval.json"
 input_dic: "anet_entities_prep/dic_anet.json"
-input_raw_cap: "anet_captions_all_splits.json"
 proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
 seg_feature_root: "dummy_rgb_motion_1d"
 feature_root: "dummy_fc6_feat_100rois"

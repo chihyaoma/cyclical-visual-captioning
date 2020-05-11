@@ -89,12 +89,12 @@ class DataLoader(data.Dataset):
             self.glove_vg_cls[i] = avg_vector / len(vector)
 
         # open the caption json file
-        print('DataLoader loading json file: ', opt.input_json)
+        print('DataLoader loading input file: ', opt.input_json)
         self.caption_file = json.load(open(self.opt.input_json))
 
         # open the caption json file with segment boundaries
-        print('DataLoader loading json file: ', opt.input_raw_cap)
-        self.raw_caption_file = json.load(open(opt.input_raw_cap))
+        print('DataLoader loading grounding file: ', opt.grd_reference)
+        self.timestamp_file = json.load(open(opt.grd_reference))
 
         # open the detection json file.
         if num_proposals is None or label_proposals is None:
@@ -216,9 +216,8 @@ class DataLoader(data.Dataset):
             (seg_rgb_feature, seg_motion_feature), axis=1)
 
         # not accurate, with minor misalignments
-        timestamps = self.raw_caption_file[vid_id_ix]['timestamps'][int(
-            seg_id_ix)]
-        dur = self.raw_caption_file[vid_id_ix]['duration']
+        timestamps = self.timestamp_file['annotations'][vid_id_ix]['segments'][str(int(seg_id_ix))]['timestamps']
+        dur = self.timestamp_file['annotations'][vid_id_ix]['duration']
         num_frm = seg_feature_raw.shape[0]
         sample_idx = np.array(
             [np.round(num_frm * timestamps[0] * 1. / dur), np.round(num_frm * timestamps[1] * 1. / dur)])
