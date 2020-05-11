@@ -23,7 +23,6 @@ from PIL import Image
 import torchvision.transforms as transforms
 import torchtext.vocab as vocab  # use this to load glove vector
 from collections import defaultdict
-import nltk
 
 
 class DataLoader(data.Dataset):
@@ -62,32 +61,6 @@ class DataLoader(data.Dataset):
         self.vocab_size = len(self.itow) + 1  # since it start from 1
         print('vocab size is ', self.vocab_size)
         self.itoc = self.itod
-
-        # self.i_to_visually_groundable = []
-        # visually_groundable_pos = [
-        #     # 'JJ', 'JJR', 'JJS',  # for adj
-        #     'NN', 'NNS', 'NNP', 'NNPS', 'PRP',  # for nouns
-        #     'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ',  # for verb
-        # ]
-        # if not opt.nltk_visually_groundable:
-        #     lemma_groundable_word = [self.wtol[key] for key, idx in self.wtod.items() if key in self.wtol]
-        #     self.groundable_word_index = {}
-        #     for word_idx, word in self.itow.items():
-        #         pos = nltk.pos_tag([word])[0][1]
-        #         # if word in self.wtol and self.wtol[word] in lemma_groundable_word and pos in visually_groundable_pos:
-        #         if word in self.wtol and self.wtol[word] in lemma_groundable_word:
-        #             self.groundable_word_index[word] = word_idx
-        #             self.i_to_visually_groundable.append(word_idx)
-        # else:
-        #     # self.i_to_pos = {}
-        #     # self.word_to_pos = {}
-        #     for word_idx, word in self.itow.items():
-        #         if word != '<EOS>' and word != 'UNK' and word != '"':
-        #             pos = nltk.pos_tag([word])[0][1]
-        #             # self.i_to_pos[word_idx] = pos
-        #             if pos in visually_groundable_pos and word_idx not in self.i_to_visually_groundable:
-        #                 # self.word_to_pos[word] = pos
-        #                 self.i_to_visually_groundable.append(word_idx)
 
         # get the glove vector for the vg detection cls
         obj_cls_file = 'data/vg_object_vocab.txt'  # From Peter's repo
@@ -179,13 +152,6 @@ class DataLoader(data.Dataset):
                     # else:
                     self.split_ix.append(ix)
         print('assigned %d segments to split %s' % (len(self.split_ix), split))
-
-        if split == 'train':
-            grounding_annotation_amount = opt.grounding_annotation_amount
-            self.remove_grounding_split_ix = random.sample(self.split_ix,
-                                                           int(len(self.split_ix) * (1 - grounding_annotation_amount)))
-        else:
-            self.remove_grounding_split_ix = []
 
     def get_det_word(self, gt_bboxs, caption, bbox_ann):
 
@@ -334,10 +300,6 @@ class DataLoader(data.Dataset):
             box_mask[0, i, int(gt_bboxs[i][7])] = 0
 
         gt_bboxs = gt_bboxs[:, :6]
-
-        # reduce the number of grounding annotations on the randomly sampled video
-        if ix in self.remove_grounding_split_ix and self.split == 'train':
-            gt_bboxs.fill(0)
 
         # get the batch version of the seq and box_mask.
         if ncap < self.seq_per_img:

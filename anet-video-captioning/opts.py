@@ -4,6 +4,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 #
+# revised by Chih-Yao Ma @ 20200501
 
 import argparse
 
@@ -17,7 +18,7 @@ def parse_opt():
                         help='')
     parser.add_argument('--dataset', type=str, default='anet',
                         help='')
-    parser.add_argument('--data_path', type=str, default='anet',
+    parser.add_argument('--data_path', type=str, default='data/anet/',
                         help='')
     parser.add_argument('--input_json', type=str, default='',
                         help='path to the json file containing additional info and vocab')
@@ -31,8 +32,7 @@ def parse_opt():
                         help='path to the npy flies containing region features')
     parser.add_argument('--seg_feature_root', type=str, default='',
                         help='path to the npy files containing frame-wise features')
-
-    parser.add_argument('--num_workers', type=int, default=20,
+    parser.add_argument('--num_workers', type=int, default=4,
                         help='number of worker to load data')
     parser.add_argument('--cuda', action='store_true',
                         help='whether use cuda')
@@ -59,27 +59,22 @@ def parse_opt():
     parser.add_argument('--prop_thresh', type=float, default=0.2,
                         help='threshold to filter out low-confidence proposals')
 
-    parser.add_argument('--att_model', type=str, default='topdown',
-                        help='different attention model, now supporting topdown | transformer(unsupervised)')
+    parser.add_argument('--att_model', type=str, default='cyclical',
+                        help='attention model')
     parser.add_argument('--att_input_mode', type=str, default='both',
                         help='use whether featmap|region|dual_region|both in topdown language model')
     parser.add_argument('--t_attn_mode', type=str, default='bigru',
                         help='temporal attention context encoding mode: bilstm | bigru')
-    parser.add_argument('--transfer_mode', type=str, default='cls',
-                        help='knowledge transfer mode, could be cls|glove|both')
-    parser.add_argument('--region_attn_mode', type=str, default='mix',
-                        help='options: dp|add|cat|mix, dp stands for dot-product, add for additive, cat for concat, mix indicates dp for grd. and add for attn., mix_mul indicates dp for grd. and element-wise multiplication for attn.')
 
     parser.add_argument('--enable_BUTD', action='store_true',
                         help='if enable, the region feature will not include location embedding nor class encoding')
-    parser.add_argument('--obj_interact', action='store_true',
-                        help='self-attention encoding for region features')
     parser.add_argument('--exclude_bgd_det', action='store_true',
                         help='exclude __background__ RoIs')
 
-    parser.add_argument('--w_att2', type=float, default=0)
-    parser.add_argument('--w_grd', type=float, default=0)
-    parser.add_argument('--w_cls', type=float, default=0)
+    parser.add_argument('--w_att2', type=float, default=0,
+                        help='loss weighting for supervised attention')
+    parser.add_argument('--w_cls', type=float, default=0,
+                        help='loss weighting for supervised cls')
 
     # Optimization: General
     parser.add_argument('--max_epochs', type=int,
@@ -168,9 +163,6 @@ def parse_opt():
 
 
 def add_cyclical_args(parser):
-    parser.add_argument('--grounding_annotation_amount', default=1, type=float,
-                        help='The amount of grounding annotation used during supervised training: 1 means 100%')
-
     parser.add_argument('--patience', default=10, type=int,
                         help='Number of epochs with no improvement after which learning rate will be reduced.')
     parser.add_argument('--min_lr', default=5e-6, type=float,
@@ -196,7 +188,7 @@ def add_cyclical_args(parser):
                         default=2048, help='visual words embedding size')
 
     # Model
-    parser.add_argument('--softattn_type', default='dot-product',
+    parser.add_argument('--softattn_type', default='additive',
                         type=str,  help='additive | dot-product')
     parser.add_argument('--softmax_temp', default=1,
                         type=float, help='the temperature for softmax')
@@ -210,8 +202,6 @@ def add_cyclical_args(parser):
     # Model - ROIs Localizer
     parser.add_argument('--localizer_softmax_temp', type=float,
                         default=1, help='the softmax temperature for localizer')
-    parser.add_argument('--nltk_visually_groundable', type=bool, default=False,
-                        help='Use NLTK POS tagger to find the visually groundable words. If not, use object classes from the dataset directly')
     parser.add_argument('--localizer_only_groundable', type=bool, default=False,
                         help='Localized ROIs only valid when target words are nouns or verbs')
 

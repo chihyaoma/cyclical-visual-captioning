@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 #
 # revised by Chih-Yao Ma @ 20200501
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
@@ -195,7 +196,8 @@ def main():
         opt.tb_log_dir, opt.exp_name, opt.resume) if not opt.inference_only else None
 
     # set up trainer
-    trainer = Trainer(opt, dataset, model, optimizer, dataloader, dataloader_val)
+    trainer = Trainer(opt, dataset, model, optimizer,
+                      dataloader, dataloader_val)
 
     # set up LR scheduler
     scheduler = ReduceLROnPlateau(

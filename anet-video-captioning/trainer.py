@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.join(
     _SCRIPTPATH_, 'tools/densevid_eval/coco-caption'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
 
-from eval_grd_anet_entities import ANetGrdEval
 from evaluate import ANETcaptions
+from eval_grd_anet_entities import ANetGrdEval
 
 
 class Trainer():
@@ -352,4 +352,3 @@ class Trainer():
                     'grounding_{}/f1_loc'.format(self.opts.val_split), f1_loc, epoch)
 
         return lang_stats
-

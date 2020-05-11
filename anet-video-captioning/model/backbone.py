@@ -36,14 +36,6 @@ class RegionalFeatureExtractorGVD(nn.Module):
         self.detect_size = opts.detect_size  # number of fine-grained detection classes
         self.pool_feat_size = self.att_feat_size + 300 + self.detect_size + 1
 
-        # if opts.transfer_mode in ('none', 'cls'):
-        #     self.vis_encoding_size = 2048
-        # elif opts.transfer_mode == 'both':
-        #     self.vis_encoding_size = 2348
-        # elif opts.transfer_mode == 'glove':
-        #     self.vis_encoding_size = 300
-        # else:
-        #     raise NotImplementedError
         self.vis_encoding_size = opts.vis_encoding_size
 
         self.t_attn_size = opts.t_attn_size
@@ -99,17 +91,6 @@ class RegionalFeatureExtractorGVD(nn.Module):
         if opts.att_model == 'transformer':
             raise NotImplementedError()
 
-        # if opts.obj_interact:
-        #     n_layers = 2
-        #     n_heads = 6
-        #     attn_drop = 0.2
-        #     self.obj_interact = Transformer(self.rnn_size, 0, 0,
-        #                                     d_hidden=int(self.rnn_size / 2),
-        #                                     n_layers=n_layers,
-        #                                     n_heads=n_heads,
-        #                                     drop_ratio=attn_drop,
-        #                                     pe=False)
-
         if opts.t_attn_mode == 'bilstm':  # frame-wise feature encoding
             n_layers = 2
             attn_drop = 0.2
@@ -164,13 +145,6 @@ class RegionalFeatureExtractorGVD(nn.Module):
             vis_classifiers[i] = cls_score_w[matched_cls[i]]
             self.vis_classifiers_bias[i].data.copy_(
                 cls_score_b[matched_cls[i]])
-            # if max_sim[i].item() < 0.9:
-            #     print(
-            #         'index: {}, similarity: {:.2}, {}, {}'.format(
-            #             i, max_sim[i].item(), opts.itod[i],
-            #             opts.vg_cls[matched_cls[i]]
-            #         )
-            #     )
 
         self.vis_embed[0].weight.data.copy_(vis_classifiers)
         # ====================================================================================
@@ -221,8 +195,10 @@ class RegionalFeatureExtractorGVD(nn.Module):
         seq_batch_size = self.seq_per_img * batch_size
         num_rois = proposals.size(1)
 
-        # some of the ROI proposals are empty. The number of proposals is recorded in num[:, 1]
-        # we construct the mask for masking later on. num_rois + 1 because the fake sentinel ROI we will be generating
+        # some of the ROI proposals are empty.
+        # The number of proposals is recorded in num[:, 1]
+        # we construct the mask for masking later on.
+        # num_rois + 1 because the fake sentinel ROI we will be generating
         pnt_mask = mask_boxes.new_ones(batch_size, num_rois + 1).bool()
         for i in range(batch_size):
             pnt_mask[i, :num.data[i, 1].long() + 1] = 0
@@ -244,12 +220,9 @@ class RegionalFeatureExtractorGVD(nn.Module):
         ), self.ctx2pool_grd, (pnt_mask[:, 1:] == 0).float())
         g_pool_feats = pool_feats
 
-        # cls_accu = 0
         # ========= visual words embedding =========
         vis_word = torch.LongTensor(
             range(0, self.detect_size + 1)).to(self.device)
-        # vis_word = torch.LongTensor(range(0, self.detect_size + 1)).to(segs_feat.get_device())
-        # encodings = encodings.cuda(x.get_device())
 
         vis_word_embed = self.vis_embed(vis_word)
         assert (vis_word_embed.size(0) == self.detect_size + 1)
@@ -263,16 +236,8 @@ class RegionalFeatureExtractorGVD(nn.Module):
         else:
             bias = None
 
-        # region-class similarity matrix
-        # sim_target = utils.sim_mat_target(overlaps_no_replicate, gt_boxes[:, :, 4].data)  # B, num_box, num_rois
-        # sim_mask = (sim_target > 0)
-
         sim_mat_static = self._grounder(
             p_vis_word_embed, g_pool_feats, pnt_mask[:, 1:], bias)
-
-        # sim_mat_static_update = sim_mat_static.view(batch_size, 1, self.detect_size + 1, num_rois) \
-        #     .expand(batch_size, self.seq_per_img, self.detect_size + 1, num_rois).contiguous() \
-        #     .view(seq_batch_size, self.detect_size + 1, num_rois)
 
         sim_mat_static = F.softmax(sim_mat_static, dim=1)
 
@@ -283,16 +248,6 @@ class RegionalFeatureExtractorGVD(nn.Module):
             sim_target = utils.sim_mat_target(
                 overlaps, gt_boxes[:, :, 5].data)  # B, num_box, num_rois
             sim_mask = (sim_target > 0)
-            # if not eval_obj_ground:
-            #     masked_sim = torch.gather(sim_mat_static, 1, sim_target)
-            #     masked_sim = torch.masked_select(masked_sim, sim_mask)
-            #     cls_loss = F.binary_cross_entropy(masked_sim, masked_sim.new(masked_sim.size()).fill_(1))
-            # else:
-            #     # region classification accuracy
-            #     sim_target_masked = torch.masked_select(sim_target, sim_mask)
-            #     sim_mat_masked = torch.masked_select(
-            #         torch.max(sim_mat_static, dim=1)[1].unsqueeze(1).expand_as(sim_target), sim_mask)
-            #     cls_pred = torch.stack((sim_target_masked, sim_mat_masked), dim=1).data
 
             if sim_mask.sum() == 0:
                 cls_loss, cls_pred = torch.zeros(1).to(
@@ -322,7 +277,6 @@ class RegionalFeatureExtractorGVD(nn.Module):
                                     F.layer_norm(label_feat, [label_feat.size(-1)])), 2)
 
         # ========================================================
-
         # replicate the feature to map the seq size.
         fc_feats = fc_feats.view(batch_size, 1, self.fc_feat_size) \
             .expand(batch_size, self.seq_per_img, self.fc_feat_size) \
@@ -353,10 +307,13 @@ class RegionalFeatureExtractorGVD(nn.Module):
         :return:
         """
         batch_size = segs_feat.size(0)
-        fc_feats, conv_feats, pool_feats, g_pool_feats, pnt_mask, overlaps_expanded, sample_idx_mask, \
-            cls_pred, cls_loss = self.get_conv_pooled_feats(segs_feat, proposals, mask_boxes, num, region_feats, gt_boxes,
-                                                            overlaps, sample_idx, eval_obj_ground,
-                                                            replicate_feat=replicate_feat)
+        fc_feats, conv_feats, pool_feats, g_pool_feats, pnt_mask, \
+            overlaps_expanded, sample_idx_mask, cls_pred, \
+            cls_loss = self.get_conv_pooled_feats(segs_feat, proposals,
+                                                  mask_boxes, num, region_feats,
+                                                  gt_boxes, overlaps, sample_idx,
+                                                  eval_obj_ground,
+                                                  replicate_feat=replicate_feat)
 
         # embed fc and att feats
         fc_feats = self.fc_embed(fc_feats)
@@ -371,13 +328,11 @@ class RegionalFeatureExtractorGVD(nn.Module):
             conv_feats_splits = torch.split(conv_feats, 2048, 2)
             conv_feats = torch.cat([m(c) for (m, c) in zip(
                 self.att_embed, conv_feats_splits)], dim=2)
-            conv_feats = conv_feats.permute(0, 2,
-                                            1).contiguous()  # inconsistency between Torch TempConv and PyTorch Conv1d
+            conv_feats = conv_feats.permute(0, 2, 1).contiguous()
             conv_feats = self.att_embed_aux(conv_feats)
-            conv_feats = conv_feats.permute(0, 2,
-                                            1).contiguous()  # inconsistency between Torch TempConv and PyTorch Conv1d
+            conv_feats = conv_feats.permute(0, 2, 1).contiguous()
 
-            # TODO: call self.context_enc.flatten_parameters()?
+            # call .flatten_parameters() to reduce GPU memory usage for rnn
             self.context_enc.flatten_parameters()
             conv_feats = self.context_enc(conv_feats)[0]
 
@@ -392,4 +347,5 @@ class RegionalFeatureExtractorGVD(nn.Module):
             conv_feats = pool_feats.new(1, 1).fill_(0)
             p_conv_feats = pool_feats.new(1, 1).fill_(0)
 
-        return fc_feats, conv_feats, p_conv_feats, pool_feats, p_pool_feats, g_pool_feats, pnt_mask, overlaps_expanded, cls_pred, cls_loss
+        return fc_feats, conv_feats, p_conv_feats, pool_feats, p_pool_feats, \
+            g_pool_feats, pnt_mask, overlaps_expanded, cls_pred, cls_loss

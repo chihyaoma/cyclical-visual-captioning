@@ -1,24 +1,25 @@
 # dataset setting
 dataset: anet
-input_json: "cap_anet_trainval.json"
-input_dic: "dic_anet.json"
-input_raw_cap: "anet_captions_all_splits.json"
-seg_feature_root: "rgb_motion_1d"
-# image_path: "frames_10frm" # for visualization only
-feature_root: "fc6_feat_100rois"
-proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
 
-val_split: validation
-densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
-# val_split: testing
-# densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
-
+data_path: "data/anet/" # ripl-w6
 # data_path: 'data/anet-nethome/'  # skynet
 # data_path: '/srv/datasets/activityNet/anet-entities/'  # skynet
 # data_path: "/coc/scratch/cma64/anet-entities/" # skynet
 # data_path: '/datasets/cma64/anet/'  # ripl-w1
 # data_path: /home/temp/cma64/anet-entities/ # ripl-s1
-data_path: "data/anet/" # ripl-w6
+
+input_json: "cap_anet_trainval.json"
+input_dic: "dic_anet.json"
+input_raw_cap: "anet_captions_all_splits.json"
+seg_feature_root: "rgb_motion_1d"
+feature_root: "fc6_feat_100rois"
+proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
+
+val_split: validation
+densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
+# use the following two lines for test set submission
+# val_split: testing
+# densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
 
 # training and eval setting
 # exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2-seed_123
@@ -66,37 +67,25 @@ max_epochs: 100
 # num_workers: 2
 # batch_size: 64
 batch_size: 48
-# batch_size: 8
-#batch_size: 24
-#batch_size: 32
-
-# batch_size: 96
 num_workers: 8
-# batch_size: 8
-# num_workers: 0
+
 cuda: True
 mGPUs: True
 
 # model
 softattn_type: "additive"
-# obj_interact: True
-obj_interact: False
 
 embedding_vocab_plus_1: False
 
 # cyclical training
 train_decoder_only: False
-# resume_decoder_exp_name: 20190826-baseline-BS|96-cpu|8-LR|1e-4-epoch|100-skynet-seed|123
-# resume_decoder_exp_name: 20190826-baseline-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
 resume_decoder_exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
 resume_embed: 1
 resume_logit: 1
 resume_roi_extractor: 1
 
 # localizer
-# nltk_visually_groundable: True
 # localizer_only_groundable: True
-nltk_visually_groundable: False
 localizer_only_groundable: False
 
 # loss weights
