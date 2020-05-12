@@ -22,20 +22,21 @@ densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
 # exp_name: 20200425-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw6_2080_4-seed_1
 # exp_name: 20200426-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
 # exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # with 4 GPUs, runs until 21 epochs, stuck during inference
-exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 84, stopped manually, runs on GPU #0 & #1
+# exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 84, stopped manually, runs on GPU #0 & #1
 # exp_name: 20200428-torch1.5-baseline-softattn_additive-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1  # success, runs until epoch 88, stopped manually, runs on GPU #0, #1, #2
 # exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # failed, runs only 5 epochs, stuck during inference
 # exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1 # success, runs until epoch 67, stopped manually, runs on GPU #2, #3
+exp_name: 20200511-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_100
 # ================ code release ================
 
-seed: 1
+seed: 100
 densecap_verbose: True
 disp_interval: 1
 
 # evaluating options
 language_eval: True
-eval_obj_grounding: True
-inference_only: True
+eval_obj_grounding: False
+inference_only: False
 resume: True
 load_best_score: 1
 

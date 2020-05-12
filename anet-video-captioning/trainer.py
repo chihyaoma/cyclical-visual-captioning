@@ -94,6 +94,11 @@ class Trainer():
             else:
                 raise ValueError(
                     'Unknown att_model: {}'.format(self.opts.att_model))
+            
+            lm_loss = lm_loss.mean()
+            att2_loss = att2_loss.mean()
+            cls_loss = cls_loss.mean()
+            lm_recon_loss = lm_recon_loss.mean()
 
             loss = self.opts.xe_loss_weight * lm_loss + \
                 self.opts.w_att2 * att2_loss + \
@@ -102,7 +107,6 @@ class Trainer():
 
             # record losses
             tb_step = self.opts.batch_size * self.opts.seq_per_img
-            # losses.update(loss.item(), tb_step)
             lm_losses.update(lm_loss.item(), tb_step)
             attn_losses.update(att2_loss.item(), tb_step)
             cls_losses.update(cls_loss.item(), tb_step)

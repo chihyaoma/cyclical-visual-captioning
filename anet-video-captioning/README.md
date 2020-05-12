@@ -8,8 +8,6 @@ The following guideline shows how to train and evaluate on [ActivityNet-Entities
 
 Use the following command to start the training of the baseline model.
 
-Note that there seems to be an cuda error when training with 4 2080 Ti GPUs. See here for further details.
-
 ```shell
 CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/baseline.yml'
 ```

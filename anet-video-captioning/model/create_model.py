@@ -8,7 +8,6 @@ from model.decoder_core import TopDownDecoderCore
 from cycle_utils import resume_decoder_roiextractor
 
 
-
 def build_model(opts, device):
     pretrained_decoder, embed, logit, roi_extractor = None, None, None, None
 
@@ -35,6 +34,4 @@ def build_model(opts, device):
             opts, opts.resume_decoder_exp_name, pretrained_decoder, embed, logit, roi_extractor)
 
     model = DecodeAndGroundCaptionerGVDROI(opts, pretrained_decoder, embed, logit, roi_extractor).to(device)
-
-    # return torch.nn.DataParallel(model).to(device)
     return model
