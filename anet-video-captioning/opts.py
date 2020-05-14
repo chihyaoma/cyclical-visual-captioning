@@ -140,7 +140,7 @@ def parse_opt():
                         help='directory to store checkpointed models')
     parser.add_argument('--language_eval', action='store_true',
                         help='Evaluate language as well (1 = yes, 0 = no)?')
-    parser.add_argument('--load_best_score', type=int, default=1,
+    parser.add_argument('--load_best_score', action='store_true',
                         help='Do we load previous best score when resuming training.')
     parser.add_argument('--disp_interval', type=int, default=100,
                         help='how many iteration to display an loss.')

@@ -35,7 +35,7 @@ language_eval: False
 eval_obj_grounding: False
 inference_only: False
 resume: False
-load_best_score: 1
+load_best_score: True
 
 # model
 softattn_type: "additive"
@@ -43,7 +43,7 @@ embedding_vocab_plus_1: False
 
 # cyclical training
 train_decoder_only: True
-#train_decoder_only: False
+# train_decoder_only: False
 resume_embed: 0
 resume_logit: 0
 resume_roi_extractor: 1

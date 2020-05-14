@@ -21,26 +21,9 @@ densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
 # densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
 
 # training and eval setting
-# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw2-seed_123
-# exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_50
-# exp_name: 20190912-cyclical-softattn_additive-resume_roi-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2-seed_1
-#exp_name: 20191111-cyclical-softattn_additive-resume_roi-BS_32-cpu_8-LR_1e-4-epoch_100-riplw6-seed_1
-# exp_name: 20191112-cyclical-softattn_additive-localizer_only_groundable-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw1-seed_1
-# exp_name: 20191113-cyclical-softattn_additive-localizer_only_groundable-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-riplw1-seed_50
-# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2-seed_123
-# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_123
-# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
-# exp_name: 20190910-cyclical-softattn_additive-resume_roi-BS_96-cpu_8-LR_1e-4-epoch_100-skynet-seed_1
-# exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
-# exp_name: 20200430-torch1.5-cyclical-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1
-exp_name: 20200511-torch1.5-cyclical-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_50
-# exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1
-# exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_123
-# exp_name: 20200430-torch1.5-cyclical-resume_embed_logit-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_50
+exp_name: cyclical
 
-# id: '1'
-
-seed: 50
+seed: 1
 densecap_verbose: True
 disp_interval: 1
 
@@ -49,7 +32,7 @@ language_eval: True
 eval_obj_grounding: False
 inference_only: False
 resume: False
-load_best_score: 1 # load from the best model
+load_best_score: True  # load from the best model
 
 # language model
 att_model: cyclical
@@ -58,14 +41,8 @@ seq_per_img: 1
 
 # training setting
 learning_rate: 0.0001
-# learning_rate: 0.00005
 optim: "adam"
 max_epochs: 100
-# batch_size: 240
-# batch_size: 256 # OOM
-# batch_size: 192  # dataloading is slow
-# num_workers: 2
-# batch_size: 64
 batch_size: 48
 num_workers: 8
 
@@ -79,13 +56,12 @@ embedding_vocab_plus_1: False
 
 # cyclical training
 train_decoder_only: False
-resume_decoder_exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
-resume_embed: 0
-resume_logit: 0
+resume_decoder_exp_name: baseline
+resume_embed: 1  # resume embedding layer
+resume_logit: 1  # resume logit output layer
 resume_roi_extractor: 1
 
 # localizer
-# localizer_only_groundable: True
 localizer_only_groundable: False
 
 # loss weights

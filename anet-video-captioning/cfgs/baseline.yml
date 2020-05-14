@@ -14,22 +14,9 @@ densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
 # densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
 
 # training and eval setting
-# ================ code release ================
-# exp_name: 20200415-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw6_2080-seed_1
-# exp_name: 20200417-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw6_2080-seed_1
-# exp_name: 20200424-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw6_2080_2-seed_1
-# exp_name: 20200424-torch1.5-baseline-softattn_additive-BS_96-cpu_8-LR_1e-4-epoch_100-riplw6_2080_4-seed_1
-# exp_name: 20200425-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw6_2080_4-seed_1
-# exp_name: 20200426-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1
-# exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # with 4 GPUs, runs until 21 epochs, stuck during inference
-# exp_name: 20200427-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1  # success, runs until epoch 84, stopped manually, runs on GPU #0 & #1
-# exp_name: 20200428-torch1.5-baseline-softattn_additive-BS_48-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_1  # success, runs until epoch 88, stopped manually, runs on GPU #0, #1, #2
-# exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_64-cpu_8-LR_1e-4-epoch_100-riplw2_2080_4-seed_1  # failed, runs only 5 epochs, stuck during inference
-# exp_name: 20200429-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_2-seed_1 # success, runs until epoch 67, stopped manually, runs on GPU #2, #3
-exp_name: 20200511-torch1.5-baseline-softattn_additive-BS_32-cpu_8-LR_1e-4-epoch_100-riplw2_2080_3-seed_100
-# ================ code release ================
+exp_name: baseline
 
-seed: 100
+seed: 1
 densecap_verbose: True
 disp_interval: 1
 
@@ -37,8 +24,8 @@ disp_interval: 1
 language_eval: True
 eval_obj_grounding: False
 inference_only: False
-resume: True
-load_best_score: 1
+resume: False
+load_best_score: True  # load from the best model
 
 # language model
 att_model: cyclical
@@ -55,8 +42,6 @@ optim: "adam"
 max_epochs: 100
 batch_size: 48
 num_workers: 8
-# batch_size: 4
-# num_workers: 0
 
 # model
 softattn_type: "additive"
@@ -73,7 +58,9 @@ input_encoding_size: 512
 att_hid_size: 512
 
 # supervised weighting
-# w_att2: 0.05
-# w_cls: 0.1
 w_att2: 0.0
 w_cls: 0.0
+
+# use the following weighting on the loss for supervised grounding training
+# w_att2: 0.05
+# w_cls: 0.1

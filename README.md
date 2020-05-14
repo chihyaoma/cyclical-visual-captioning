@@ -13,9 +13,7 @@ This is the PyTorch implementation of our paper:
 <img src="teaser/concept.png" width="100%">
 </p>
 
-## Code coming soon! Please stay tuned.
-
-## Quick Start
+## How to start
 
 Clone the repo recursively:
 
@@ -33,7 +31,7 @@ git submodule update --init --recursive
 
 The proposed cyclical method can be applied directly to image and video captioning tasks.
 
-Please follows the individual installation guidelines to install for image captioning dataset or video captioning dataset, in case you only need one of them.
+Currently, installation guide and our code for video captioning on the ActivityNet-Entities dataset are provided in [anet-video-captioning](anet-video-captioning).
 
 ## Acknowledgments
 
