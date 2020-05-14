@@ -46,14 +46,17 @@ class Trainer():
 
         lm_recon_loss = torch.zeros(1).to(self.device)
 
+        data_iter = iter(self.train_loader)
+
         # switch to train mode
         self.model.train()
 
         end = time.time()
-        for step, input in enumerate(self.train_loader):
+        for step in range(len(self.train_loader) - 1):
             # measure data loading time
             data_time.update(time.time() - end)
 
+            input = data_iter.next()
             seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, seg_id, \
                 region_feat, frm_mask, sample_idx, ppl_mask = input
 
@@ -150,6 +153,8 @@ class Trainer():
         batch_time = AverageMeter()
         data_time = AverageMeter()
 
+        data_iter_val = iter(self.val_loader)
+
         self.model.eval()
 
         num_show = 0
@@ -166,10 +171,11 @@ class Trainer():
 
         with torch.no_grad():
             end = time.time()
-            for step, input in enumerate(self.val_loader):
+            for step in range(len(self.val_loader) - 1):
                 # measure data loading time
                 data_time.update(time.time() - end)
 
+                input = data_iter_val.next()
                 seg_feat, iseq, gts_seq, num, proposals, bboxs, box_mask, \
                     seg_id, region_feat, frm_mask, sample_idx, ppl_mask = input
 
