@@ -1,0 +1,63 @@
+# dataset setting
+dataset: anet
+data_path: "data/anet/"
+input_json: "anet_entities_prep/cap_anet_trainval.json"
+input_dic: "anet_entities_prep/dic_anet.json"
+proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
+seg_feature_root: "dummy_rgb_motion_1d"
+feature_root: "dummy_fc6_feat_100rois"
+
+densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
+
+# language model
+att_model: cyclical
+num_layers: 1
+seq_per_img: 1
+
+cuda: False
+mGPUs: False
+
+# training setting
+learning_rate: 0.0001
+optim: "adam"
+max_epochs: 100
+batch_size: 8
+num_workers: 0
+
+# training and eval setting
+exp_name: local_dev
+seed: 1
+densecap_verbose: False
+disp_interval: 1
+
+# evaluating options
+language_eval: False
+eval_obj_grounding: False
+inference_only: False
+resume: False
+load_best_score: True
+
+# model
+softattn_type: "additive"
+embedding_vocab_plus_1: False
+
+# cyclical training
+train_decoder_only: True
+# train_decoder_only: False
+resume_embed: 0
+resume_logit: 0
+resume_roi_extractor: 1
+
+# localizer
+localizer_only_groundable: True
+
+# smaller model
+num_prop_per_frm: 20
+t_attn_size: 120
+rnn_size: 256
+input_encoding_size: 128
+att_hid_size: 128
+
+# supervised weighting
+w_att2: 0.0
+w_cls: 0.0

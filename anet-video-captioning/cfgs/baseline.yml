@@ -1,0 +1,66 @@
+# dataset setting
+dataset: anet
+data_path: data/anet/
+input_json: "cap_anet_trainval.json"
+input_dic: "dic_anet.json"
+seg_feature_root: "rgb_motion_1d"
+feature_root: "fc6_feat_100rois"
+proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
+
+val_split: validation
+densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
+# use the following two lines for test set submission
+# val_split: testing
+# densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
+
+# training and eval setting
+exp_name: baseline
+
+seed: 1
+densecap_verbose: True
+disp_interval: 1
+
+# evaluating options
+language_eval: True
+eval_obj_grounding: False
+inference_only: False
+resume: False
+load_best_score: True  # load from the best model
+
+# language model
+att_model: cyclical
+num_layers: 1
+seq_per_img: 1
+
+cuda: True
+mGPUs: True
+
+# training setting
+learning_rate: 0.0001
+# learning_rate: 0.00005
+optim: "adam"
+max_epochs: 100
+batch_size: 48
+num_workers: 8
+
+# model
+softattn_type: "additive"
+embedding_vocab_plus_1: False
+
+# cyclical training
+train_decoder_only: True
+
+# model size
+num_prop_per_frm: 100
+t_attn_size: 480
+rnn_size: 1024
+input_encoding_size: 512
+att_hid_size: 512
+
+# supervised weighting
+w_att2: 0.0
+w_cls: 0.0
+
+# use the following weighting on the loss for supervised grounding training
+# w_att2: 0.05
+# w_cls: 0.1

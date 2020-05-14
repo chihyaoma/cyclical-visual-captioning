@@ -1,0 +1,18 @@
+*.pyc
+*.h5
+*.json
+*.csv
+
+# output files
+log/
+save/
+results/
+
+# MacOS files
+.DS_Store
+
+# misc. scripts
+.server_scripts
+
+# ignore image captioning for now
+flickr30k-image-captioning/

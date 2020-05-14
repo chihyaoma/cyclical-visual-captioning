@@ -1,0 +1,6 @@
+[submodule "anet-video-captioning/tools/densevid_eval"]
+	path = anet-video-captioning/tools/densevid_eval
+	url = https://github.com/LuoweiZhou/densevid_eval_spice
+[submodule "anet-video-captioning/tools/anet_entities"]
+	path = anet-video-captioning/tools/anet_entities
+	url = https://github.com/facebookresearch/ActivityNet-Entities.git

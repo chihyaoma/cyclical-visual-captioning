@@ -1,0 +1,12 @@
+# 3rd party tools
+tools/stanford-corenlp-*/
+
+# dataset files
+data/anet
+data/detectron_weights
+
+# glove temp files
+.vector_cache/
+
+# tensorboard logs
+tb_logs/
