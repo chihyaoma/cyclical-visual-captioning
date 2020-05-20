@@ -9,9 +9,12 @@ proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
 
 val_split: validation
 densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
-# use the following two lines for test set submission
+# use the following lines for test set submission
 # val_split: testing
 # densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
+# grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_test_skeleton.json"
+# val_split: hidden_test
+# grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_hidden_test_skeleton.json"
 
 # training and eval setting
 exp_name: baseline

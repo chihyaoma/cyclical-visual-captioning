@@ -97,7 +97,7 @@ class Trainer():
             else:
                 raise ValueError(
                     'Unknown att_model: {}'.format(self.opts.att_model))
-            
+
             lm_loss = lm_loss.mean()
             att2_loss = att2_loss.mean()
             cls_loss = cls_loss.mean()
@@ -171,7 +171,7 @@ class Trainer():
 
         with torch.no_grad():
             end = time.time()
-            for step in range(len(self.val_loader) - 1):
+            for step in range(len(self.val_loader)):
                 # measure data loading time
                 data_time.update(time.time() - end)
 
@@ -256,8 +256,8 @@ class Trainer():
 
                     predictions[vid_idx].append(
                         {'sentence': sent,
-                         'timestamp':[round(timestamp, 2) for timestamp in timestamp_file[ \
-                         'annotations'][vid_idx]['segments'][seg_idx]['timestamps']]}
+                         'timestamp': [round(timestamp, 2) for timestamp in timestamp_file[
+                             'annotations'][vid_idx]['segments'][seg_idx]['timestamps']]}
                     )
 
                     if num_show < 20:
@@ -274,7 +274,7 @@ class Trainer():
                       .format(epoch, step, len(self.val_loader) - 1, batch_time=batch_time, data_time=data_time))
 
         lang_stats = defaultdict(float)
-        if self.opts.language_eval:
+        if self.opts.language_eval and self.opts.val_split != 'hidden_test':
             print('Total videos to be evaluated %d' % (len(predictions)))
 
             submission = 'results/' + 'densecap-' + \
@@ -349,18 +349,25 @@ class Trainer():
         \n*            results/ to the eval server!                    *')
                 print('*'*62)
 
-            if tb_logger:
-                tb_logger.add_scalar(
-                    'grounding_{}/Prec_all'.format(self.opts.val_split), prec_all, epoch)
-                tb_logger.add_scalar(
-                    'grounding_{}/recall_all'.format(self.opts.val_split), recall_all, epoch)
-                tb_logger.add_scalar(
-                    'grounding_{}/f1_all'.format(self.opts.val_split), prec_all, epoch)
-                tb_logger.add_scalar(
-                    'grounding_{}/prec_loc'.format(self.opts.val_split), prec_loc, epoch)
-                tb_logger.add_scalar(
-                    'grounding_{}/recall_loc'.format(self.opts.val_split), recall_loc, epoch)
-                tb_logger.add_scalar(
-                    'grounding_{}/f1_loc'.format(self.opts.val_split), f1_loc, epoch)
+        if self.opts.att_model == 'cyclical' and self.opts.eval_obj_grounding_gt:
+            raise NotImplementedError('Grounding evaluation on GT sentence not yet included')
+            # with torch.no_grad():
+            #     box_accu_att, box_accu_grd, cls_accu = eval_grounding()  # eval grounding
+        else:
+            box_accu_att, box_accu_grd, cls_accu = 0, 0, 0
+
+        if tb_logger:
+            tb_logger.add_scalar(
+                'grounding_{}/Prec_all'.format(self.opts.val_split), prec_all, epoch)
+            tb_logger.add_scalar(
+                'grounding_{}/recall_all'.format(self.opts.val_split), recall_all, epoch)
+            tb_logger.add_scalar(
+                'grounding_{}/f1_all'.format(self.opts.val_split), prec_all, epoch)
+            tb_logger.add_scalar(
+                'grounding_{}/prec_loc'.format(self.opts.val_split), prec_loc, epoch)
+            tb_logger.add_scalar(
+                'grounding_{}/recall_loc'.format(self.opts.val_split), recall_loc, epoch)
+            tb_logger.add_scalar(
+                'grounding_{}/f1_loc'.format(self.opts.val_split), f1_loc, epoch)
 
         return lang_stats

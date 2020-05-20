@@ -1,8 +1,12 @@
 # Quick Start (Video Captioning)
 
-The following guideline shows how to train and evaluate on [ActivityNet-Entities](https://github.com/facebookresearch/ActivityNet-Entities).
+## Installation
+
+Please follow the installation guide in [INSTALL.md](INSTALL.md) to install PyTorch and other necessary packages.
 
 ## Training
+
+The following guideline shows how to train and evaluate on [ActivityNet-Entities](https://github.com/facebookresearch/ActivityNet-Entities).
 
 ### Train baseline model
 
@@ -34,7 +38,7 @@ resume: True
 load_best_score: True
 ```
 
-### Evaluation with provided baseline
+### Evaluation with provided checkpoints
 
 #### Download the checkpoints provided
 
@@ -63,15 +67,15 @@ CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/baseline.yml'
 You should get the following performance:
 
 ```python
-Bleu_1: 23.139
-Bleu_4: 2.377
-METEOR: 10.870
-CIDEr: 47.399
-SPICE: 15.226
-F1_all: 0.0401
-F1_all_per_sent: 0.1017
-F1_loc: 0.1301
-F1_loc_per_sent: 0.3413
+Bleu_1: 23.227
+Bleu_4: 2.386
+METEOR: 10.914
+CIDEr: 47.602
+SPICE: 15.297
+F1_all: 0.0400
+F1_all_per_sent: 0.1014
+F1_loc: 0.1310
+F1_loc_per_sent: 0.3405
 ```
 
 ### Evaluation with Cyclical model
@@ -98,15 +102,15 @@ CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/cyclical.yml'
 You should get the following performance:
 
 ```python
-Bleu_1: 23.643
-Bleu_4: 2.501
-METEOR: 11.148
-CIDEr: 46.872
-SPICE: 15.243
-F1_all: 0.0477
-F1_all_per_sent: 0.1250
-F1_loc: 0.1599
-F1_loc_per_sent: 0.4241
+Bleu_1: 23.743
+Bleu_4: 2.506
+METEOR: 11.194
+CIDEr: 47.027
+SPICE: 15.312
+F1_all: 0.0478
+F1_all_per_sent: 0.1249
+F1_loc: 0.1612
+F1_loc_per_sent: 0.4237
 ```
 
 ## Test server submission

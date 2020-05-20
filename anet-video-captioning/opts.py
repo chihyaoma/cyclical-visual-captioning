@@ -132,6 +132,8 @@ def parse_opt():
                         default='tools/anet_entities/data/anet_entities_cleaned_class_thresh50_trainval.json')
     parser.add_argument('--split_file', type=str,
                         default='tools/anet_entities/data/split_ids_anet_entities.json')
+    parser.add_argument('--eval_obj_grounding_gt', action='store_true',
+                    help='whether evaluate object grounding accuracy using GT sentence')
     parser.add_argument('--eval_obj_grounding', action='store_true',
                         help='whether evaluate object grounding accuracy')
     parser.add_argument('--val_every_epoch', type=int, default=1,

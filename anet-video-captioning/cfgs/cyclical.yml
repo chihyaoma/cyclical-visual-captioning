@@ -1,13 +1,7 @@
 # dataset setting
 dataset: anet
 
-data_path: "data/anet/" # ripl-w6
-# data_path: 'data/anet-nethome/'  # skynet
-# data_path: '/srv/datasets/activityNet/anet-entities/'  # skynet
-# data_path: "/coc/scratch/cma64/anet-entities/" # skynet
-# data_path: '/datasets/cma64/anet/'  # ripl-w1
-# data_path: /home/temp/cma64/anet-entities/ # ripl-s1
-
+data_path: "data/anet/"
 input_json: "cap_anet_trainval.json"
 input_dic: "dic_anet.json"
 seg_feature_root: "rgb_motion_1d"
@@ -16,9 +10,12 @@ proposal_h5: "anet_detection_vg_fc6_feat_100rois.h5"
 
 val_split: validation
 densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
-# use the following two lines for test set submission
+# use the following lines for test set submission
 # val_split: testing
 # densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
+# grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_test_skeleton.json"
+# val_split: hidden_test
+# grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_hidden_test_skeleton.json"
 
 # training and eval setting
 exp_name: cyclical
