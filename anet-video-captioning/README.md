@@ -15,6 +15,7 @@ Use the following command to start the training of the baseline model.
 ```shell
 CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/baseline.yml'
 ```
+
 Note that you can of course use `CUDA_VISIBLE_DEVICES=0,1,2,3` to use 4 GPUs, but there is a segmentation fault issue caused by either CUDA or PyTorch where running 4 2080 Ti GPUs.
 See [INSTALL.md](INSTALL.md) for more detail and how to fix it.
 
@@ -45,6 +46,8 @@ load_best_score: True
 - [baseline](https://www.dropbox.com/s/lqk6oyx8tnktoqt/baseline.zip?dl=1) (242MB)
 - [cyclical](https://www.dropbox.com/s/y4d46wot95gxeql/cyclical.zip?dl=1) (242MB)
 
+### Evaluation with baseline
+
 To run evaluation using the baseline we provided:
 
 ```yaml
@@ -62,20 +65,6 @@ Start evaluation process by running:
 
 ```shell
 CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/baseline.yml'
-```
-
-You should get the following performance:
-
-```python
-Bleu_1: 23.227
-Bleu_4: 2.386
-METEOR: 10.914
-CIDEr: 47.602
-SPICE: 15.297
-F1_all: 0.0400
-F1_all_per_sent: 0.1014
-F1_loc: 0.1310
-F1_loc_per_sent: 0.3405
 ```
 
 ### Evaluation with Cyclical model
@@ -99,33 +88,30 @@ Start evaluation process by running:
 CUDA_VISIBLE_DEVICES=0,1,2 python main.py --path_opt 'cfgs/cyclical.yml'
 ```
 
-You should get the following performance:
+You should get the following performance for `baseline` and `cyclical` using the checkpoints we provided:
 
-```python
-Bleu_1: 23.743
-Bleu_4: 2.506
-METEOR: 11.194
-CIDEr: 47.027
-SPICE: 15.312
-F1_all: 0.0478
-F1_all_per_sent: 0.1249
-F1_loc: 0.1612
-F1_loc_per_sent: 0.4237
-```
+|          | B@1    | B@4   | METEOR | CIDEr  | SPICE  | F1_all | F1_all_per_sent | F1_loc | F1_loc_per_sent |
+|----------|--------|-------|--------|--------|--------|--------|-----------------|--------|-----------------|
+| Baseline | 23.227 | 2.386 | 10.914 | 47.602 | 15.297 | 0.0400 | 0.1014          | 0.1310 | 0.3405          |
+| Cyclical | 23.743 | 2.506 | 11.194 | 47.027 | 15.312 | 0.0478 | 0.1249          | 0.1612 | 0.4237          |
 
 ## Test server submission
 
-Change the `val_split` and `densecap_references` accordingly as follows. 
+Change the `val_split`, `densecap_references`, and `grd_reference` in the configure files (under `cfgs/`) accordingly as follows.
 Check the instruction provided in [GVD GitHub repo](https://github.com/facebookresearch/grounded-video-description#inference-and-testing) for more infomation regarding test (or hidden test) server submission.
 
 ```yml
 # use validation set as default
 val_split: validation
 densecap_references: ["anet_entities_val_1.json", "anet_entities_val_2.json"]
+grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_trainval.json"
 
 # change to the following two lines for test set submission instead
 val_split: testing
 densecap_references: ["anet_entities_test_1.json", "anet_entities_test_2.json"]
-```
+grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_test_skeleton.json"
 
-You might want to change `*testing*.json` to `*hidden_test*.json` for submission of hidden test set.
+# change to the following two lines for hidden test set submission instead
+val_split: hidden_test
+grd_reference: "tools/anet_entities/data/anet_entities_cleaned_class_thresh50_hidden_test_skeleton.json"
+```
