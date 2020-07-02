@@ -23,8 +23,6 @@ wget -P $DATA_ROOT/anet/ https://dl.fbaipublicfiles.com/ActivityNet-Entities/Act
 wget -P $DATA_ROOT/anet/ https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_entities_captions.tar.gz
 # 25 MB
 wget -P tools/coco-caption/annotations https://github.com/jiasenlu/coco-caption/raw/master/annotations/caption_flickr30k.json
-# 4 MB
-wget -P $DATA_ROOT/anet/ https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_entities_prep.tar.gz
 
 # feature files
 # 32 MB

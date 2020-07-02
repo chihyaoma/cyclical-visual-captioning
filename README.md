@@ -6,6 +6,7 @@ This is the PyTorch implementation of our paper:
 **Learning to Generate Grounded Visual Captions without Localization Supervision**<br>
 [__***Chih-Yao Ma***__](https://chihyaoma.github.io/), [Yannis Kalantidis](https://www.skamalas.com/), [Ghassan AlRegib](https://ghassanalregib.info/), [Peter Vajda](https://sites.google.com/site/vajdap), 
 [Marcus Rohrbach](https://rohrbach.vision/), [Zsolt Kira](https://www.cc.gatech.edu/~zk15/)<br>
+European Conference on Computer Vision (ECCV), 2020 <br>
 
 [[arXiv](https://arxiv.org/abs/1906.00283)] [[GitHub](https://github.com/chihyaoma/cyclical-visual-captioning)] [[Project](https://chihyaoma.github.io/project/2019/06/03/cyclical.html)]
 
@@ -43,11 +44,11 @@ We thank Chia-Jung Hsu for her valuable and artistic helps on the figures.
 If you find this repository useful, please cite our paper:
 
 ```shell
-@article{ma2019learning,
-    title={Learning to Generate Grounded Visual Captions without Localization Supervision},
+@inproceedings{ma2020learning,
+    title={Learning to Generate Grounded Image Captions without Localization Supervision},
     author={Ma, Chih-Yao and Kalantidis, Yannis and AlRegib, Ghassan and Vajda, Peter and Rohrbach, Marcus and Kira, Zsolt},
-    journal={arXiv preprint arXiv:1906.00283},
-    year={2019},
+    booktitle={Proceedings of the European Conference on Computer Vision (ECCV)},
+    year={2020},
     url={https://arxiv.org/abs/1906.00283},
 }
 ```
