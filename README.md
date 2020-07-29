@@ -1,10 +1,11 @@
 ## Learning to Generate Grounded Visual Captions without Localization Supervision
+
 <img src="teaser/pytorch-logo-dark.png" width="10%"> [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is the PyTorch implementation of our paper:
 
 **Learning to Generate Grounded Visual Captions without Localization Supervision**<br>
-[__***Chih-Yao Ma***__](https://chihyaoma.github.io/), [Yannis Kalantidis](https://www.skamalas.com/), [Ghassan AlRegib](https://ghassanalregib.info/), [Peter Vajda](https://sites.google.com/site/vajdap), 
+[****_Chih-Yao Ma_****](https://chihyaoma.github.io/), [Yannis Kalantidis](https://www.skamalas.com/), [Ghassan AlRegib](https://ghassanalregib.info/), [Peter Vajda](https://sites.google.com/site/vajdap),
 [Marcus Rohrbach](https://rohrbach.vision/), [Zsolt Kira](https://www.cc.gatech.edu/~zk15/)<br>
 European Conference on Computer Vision (ECCV), 2020 <br>
 
@@ -12,6 +13,14 @@ European Conference on Computer Vision (ECCV), 2020 <br>
 
 <p align="center">
 <img src="teaser/concept.png" width="100%">
+</p>
+
+## 10-min YouTube Video
+
+<p align="center">
+<a href="https://youtu.be/X84Tg0ULu1Y">
+  <img src="https://img.youtube.com/vi/X84Tg0ULu1Y/maxresdefault.jpg" width="75%">
+</a>
 </p>
 
 ## How to start
